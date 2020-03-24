@@ -20,7 +20,7 @@ router.get('/view',auth.authenticate(),  async function(req, res, next) {
   res.send({status: true, data: data});
 });
 
-router.get('/search', auth.authenticate(), async function(req, res, next) {
+router.post('/search', auth.authenticate(), async function(req, res, next) {
   let data = await inventoryController.search(req, res);
   res.send({status: true, data: data});
 });
