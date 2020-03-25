@@ -43,7 +43,7 @@ router.post('/login',  async function(req, res) {
     }
   });
 
-router.get('/search', auth.authenticate(), async function(req, res, next) {
+router.post('/search', auth.authenticate(), async function(req, res, next) {
   let data = await userController.search(req, res);
   res.send({status: true, data: data});
 });

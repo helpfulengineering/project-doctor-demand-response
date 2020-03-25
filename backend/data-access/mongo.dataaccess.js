@@ -82,7 +82,7 @@ let mongoDataAccess = {
         } catch(err) {
             console.log(err);
         };
-        console.log(results);
+        
         return results;
     },
     constructQuery: function(criteria) {
