@@ -8,7 +8,8 @@ export class AuthenticationService extends BaseService {
   static login(loginInfo) {
     let responseSubject = new Subject();
     RestService.post("users/login", loginInfo).subscribe(resp => {
-      AuthenticationService.getAppContext().token = resp.token;
+      localStorage.setItem('access_token', 'Bearer ' + resp.token);
+      AuthenticationService.getAppContext().token = 'Bearer ' + resp.token;
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + resp.token;
       responseSubject.next(resp);
     });
@@ -19,11 +20,12 @@ export class AuthenticationService extends BaseService {
   static logout() {
     AuthenticationService.getAppContext().token = {};
     axios.defaults.headers.common['Authorization'] = null;
+    localStorage.removeItem('access_token');
   }
 
   static isAuthenticated() {
-    if(axios.defaults.headers.common['Authorization'] && 
-      axios.defaults.headers.common['Authorization'].startsWith('Bearer')) {
+    if(localStorage.getItem('access_token') && 
+        localStorage.getItem('access_token').startsWith('Bearer')) {
       return true;
     }
 

@@ -52,15 +52,21 @@ class RequestAndInventoryView extends BaseComponent {
         "page": 1,
         "pageSize": 10
       },
-      supplyRequestTableColumnDefs: [
-        { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true },
-        { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true },
-        { headerName: "Quantity", field: "quantity", filter: true, sortable: true, resizable: true },
-        { headerName: "Urgency", field: "urgency", filter: true, sortable: true, resizable: true },
-        { headerName: "Needed By", field: "needed_by", filter: true, sortable: true, resizable: true },
-        { headerName: "Request Date", field: "request_date", filter: true, sortable: true, resizable: true },
-        { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true }
-      ],
+      supplyRequestGridOptions: {
+        columnDefs: [
+          { headerName: "Name", field: "org_name", filter: true, sortable: true },
+          { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true},
+          { headerName: "Quantity", field: "quantity", filter: true, sortable: true },
+          { headerName: "Urgency", field: "urgency", filter: true, sortable: true},
+          { headerName: "Needed By", field: "needed_by", filter: true, sortable: true},
+          { headerName: "Request Date", field: "request_date", filter: true, sortable: true},
+          { headerName: "Status", field: "status", filter: true, sortable: true}
+        ],
+        defaultColDef: {
+          resizable: true
+        },
+        rowModelType: 'infinite'
+      },
       inventoryTableColumnDefs: [
         { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true },
         { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true },
@@ -77,6 +83,7 @@ class RequestAndInventoryView extends BaseComponent {
     this.toggleSupplyRequestModal = this.toggleSupplyRequestModal.bind(this);
     this.onSRGridReady = this.onSRGridReady.bind(this);
     this.onInventoryGridReady = this.onInventoryGridReady.bind(this);
+    this.supplyRequestDataSource = this.supplyRequestDataSource.bind(this);
   }
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
@@ -85,15 +92,8 @@ class RequestAndInventoryView extends BaseComponent {
 
   onSRGridReady(params) {
     this.setState({...this.state, supplyRequestTableApi: params.api});
-    // Load supply requests
-    SupplyRequestService.search(this.state.supplyRequestSearch).subscribe(resp => {
-      if(resp.status === true) {
-        this.setState({...this.state, supplyRequestData: resp.data});
-        params.api.sizeColumnsToFit();
-      } else {
-        // Show error message
-      }
-    });
+    params.api.sizeColumnsToFit();
+    params.api.setDatasource(this.supplyRequestDataSource);
   }
 
   onInventoryGridReady(params) {
@@ -133,6 +133,21 @@ class RequestAndInventoryView extends BaseComponent {
     }
   };
 
+  supplyRequestDataSource() {
+    return {
+      getRows: function(params) {
+        // Load supply requests
+        SupplyRequestService.search(this.state.supplyRequestSearch).subscribe(resp => {
+          if(resp.status === true) {
+            this.setState({...this.state, supplyRequestData: resp.data});
+            params.successCallback(resp.data);
+            return this.state.supplyRequestData.data;
+          }
+        });
+      } 
+    };
+  }
+
   render() {
     return (
       <Page
@@ -164,7 +179,7 @@ class RequestAndInventoryView extends BaseComponent {
                 <AgGridReact
                     onGridReady={this.onSRGridReady}
                     rowData={this.state.supplyRequestData}
-                    columnDefs={this.state.supplyRequestTableColumnDefs}>
+                    gridOptions={this.state.supplyRequestGridOptions}>
                 </AgGridReact>
               </div>
             </CardBody>
