@@ -188,7 +188,7 @@ class RequestAndInventoryView extends BaseComponent {
                 </div>
             </CardHeader>
             <CardBody>
-              <div className="ag-theme-material" style={ {height: '300px', width: '100%'} }>
+              <div className="ag-theme-material" style={ {height: '400px', width: '100%'} }>
                 <AgGridReact
                     onGridReady={this.onSRGridReady}
                     rowData={this.state.supplyRequestData}
@@ -234,7 +234,7 @@ class RequestAndInventoryView extends BaseComponent {
                 </div>
             </CardHeader>
             <CardBody>
-              <div className="ag-theme-material" style={ {height: '300px', width: '100%'} }>
+              <div className="ag-theme-material" style={ {height: '400px', width: '100%'} }>
                 <AgGridReact
                     onGridReady={this.onInventoryGridReady}
                     rowData={this.state.inventoryData}
