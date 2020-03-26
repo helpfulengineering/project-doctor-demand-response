@@ -79,13 +79,28 @@ let mongoDataAccess = {
             if(criteria.endRow < 0) {
                 criteria.endRow = 10;
             }
-            console.log(criteria);
-            let cursor = dbMgr.dbConnection.collection(collection).find(
+            
+            /*let cursor = dbMgr.dbConnection.collection(collection).find(
                 mongoDataAccess.constructQuery(criteria),
                 {}
-            ).sort(criteria.sort).skip(criteria.startRow > 0 ? criteria.startRow : 0).limit(criteria.endRow - criteria.startRow);
+            ).sort(criteria.sort).skip(criteria.startRow > 0 ? criteria.startRow : 0).limit(criteria.endRow - criteria.startRow);*/
+
+            let pipelines = [
+                { $match: mongoDataAccess.constructQuery(criteria)},
+                { $lookup: criteria.lookup }];
+
+            if(Object.keys(criteria.sort).length > 0) {
+                pipelines.push({ $sort: criteria.sort });
+            }
+            pipelines.push({ $skip: (criteria.startRow > 0 ? criteria.startRow : 0) });
+            pipelines.push({ $limit: criteria.endRow - criteria.startRow });
             
-            await cursor.forEach(data => results.push(data));
+            await dbMgr.dbConnection.collection(collection).aggregate(pipelines)
+                .toArray()
+                .then(records => {
+                    records.forEach(data => results.push(data));
+                });
+            
         } catch(err) {
             console.log(err);
         };

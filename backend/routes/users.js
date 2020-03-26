@@ -36,7 +36,8 @@ router.post('/login',  async function(req, res) {
       var token = jwt.sign(payload, cfg.jwtSecret, { expiresIn: '1d' });
       res.json({
           status: true,
-          token: token
+          token: token,
+          user: payload
       });
     } else {
       res.sendStatus(401);

@@ -41,7 +41,7 @@ class RequestAndInventoryView extends BaseComponent {
       supplyRequestModal: false,
       supplyRequestGridOptions: {
         columnDefs: [
-          { headerName: "Name", field: "org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Name", field: "user.org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Quantity", field: "quantity", sortable: true },
           { headerName: "Urgency", field: "urgency", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
