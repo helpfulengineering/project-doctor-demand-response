@@ -30,6 +30,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Typography from '../components/Typography';
 import SupplyRequestForm from './SupplyRequestForm';
 import InventoryForm from './InventoryForm';
+import GridUtil from '../utils/grid-util';
 
 
 class RequestAndInventoryView extends BaseComponent {
@@ -38,29 +39,15 @@ class RequestAndInventoryView extends BaseComponent {
     super(props);
     this.state = { ...this.state,
       supplyRequestModal: false,
-      supplyRequestSearch: {
-        "sort": {
-          "request_date": -1
-        },
-        "page": 1,
-        "pageSize": 10
-      },
-      inventorySearch: {
-        "sort": {
-          "created_date": -1
-        },
-        "page": 1,
-        "pageSize": 10
-      },
       supplyRequestGridOptions: {
         columnDefs: [
-          { headerName: "Name", field: "org_name", filter: true, sortable: true },
-          { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true},
-          { headerName: "Quantity", field: "quantity", filter: true, sortable: true },
-          { headerName: "Urgency", field: "urgency", filter: true, sortable: true},
-          { headerName: "Needed By", field: "needed_by", filter: true, sortable: true},
-          { headerName: "Request Date", field: "request_date", filter: true, sortable: true},
-          { headerName: "Status", field: "status", filter: true, sortable: true}
+          { headerName: "Name", field: "org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Quantity", field: "quantity", sortable: true },
+          { headerName: "Urgency", field: "urgency", filter: true, sortable: true, filterParams: {filterOptions: ['equals'], suppressAndOrCondition: true} },
+          { headerName: "Needed By", field: "needed_by", sortable: true},
+          { headerName: "Request Date", field: "request_date", sortable: true},
+          { headerName: "Status", field: "status", filter: true, sortable: true, filterParams: {filterOptions: ['equals'], suppressAndOrCondition: true} }
         ],
         defaultColDef: {
           resizable: true
@@ -68,7 +55,7 @@ class RequestAndInventoryView extends BaseComponent {
         rowModelType: 'infinite',
         paginationPageSize: 10,
         cacheBlockSize: 10,
-        maxBlocksInCache: 3
+        maxBlocksInCache: 1
       },
       inventoryGridOptions: {
         columnDefs: [
@@ -148,9 +135,8 @@ class RequestAndInventoryView extends BaseComponent {
   supplyRequestDataSource() {
     let ds = {
       getRows: function(params) {
-        console.log(params);
         // Load supply requests
-        SupplyRequestService.search(this.state.supplyRequestSearch).subscribe(resp => {
+        SupplyRequestService.search(GridUtil.transformGridParams(params)).subscribe(resp => {
           if(resp.status === true) {
             this.setState({...this.state, supplyRequestData: resp.data});
             params.successCallback(resp.data, -1);
@@ -167,7 +153,7 @@ class RequestAndInventoryView extends BaseComponent {
     let ds = {
       getRows: function(params) {
         // Load inventories
-        InventoryService.search(this.state.inventorySearch).subscribe(resp => {
+        InventoryService.search(GridUtil.transformGridParams(params)).subscribe(resp => {
           if(resp.status === true) {
             this.setState({...this.state, supplyRequestData: resp.data});
             params.successCallback(resp.data, -1);

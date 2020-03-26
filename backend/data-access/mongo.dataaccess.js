@@ -73,10 +73,17 @@ let mongoDataAccess = {
     search: async function(collection, criteria) {
         let results = [];
         try {
+            if(criteria.startRow < 0) {
+                criteria.startRow = 0;
+            }
+            if(criteria.endRow < 0) {
+                criteria.endRow = 10;
+            }
+            console.log(criteria);
             let cursor = dbMgr.dbConnection.collection(collection).find(
                 mongoDataAccess.constructQuery(criteria),
                 {}
-            ).sort(criteria.sort).skip((criteria.page > 1 ? criteria.page - 1 : 0) * criteria.pageSize).limit(criteria.pageSize);
+            ).sort(criteria.sort).skip(criteria.startRow > 0 ? criteria.startRow : 0).limit(criteria.endRow - criteria.startRow);
             
             await cursor.forEach(data => results.push(data));
         } catch(err) {
@@ -86,7 +93,12 @@ let mongoDataAccess = {
         return results;
     },
     constructQuery: function(criteria) {
-        return {};
+        let filter = {};
+        if(criteria.filter && criteria.filter.field_name && criteria.filter.filter_text) {
+            filter[criteria.filter.field_name] = {$regex: new RegExp('^.*' + criteria.filter.filter_text.toLowerCase() + '.*', 'i')};
+        }
+        console.log(filter);
+        return filter;
     }
 };
 
