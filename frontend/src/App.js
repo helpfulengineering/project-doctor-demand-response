@@ -4,6 +4,7 @@ import PageSpinner from 'components/PageSpinner';
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import axios from "axios";
 import './styles/reduction.scss';
 import SignupView from './views/SignupView';
 import LoginView from './views/LoginView';
@@ -33,6 +34,10 @@ const getBasename = () => {
 };
 
 class App extends React.Component {
+
+  componentDidMount() {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_token');
+  }
   render() {
     return (
       <BrowserRouter basename={getBasename()}>

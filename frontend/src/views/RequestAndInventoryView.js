@@ -65,14 +65,26 @@ class RequestAndInventoryView extends BaseComponent {
         defaultColDef: {
           resizable: true
         },
-        rowModelType: 'infinite'
+        rowModelType: 'infinite',
+        paginationPageSize: 10,
+        cacheBlockSize: 10,
+        maxBlocksInCache: 3
       },
-      inventoryTableColumnDefs: [
-        { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true },
-        { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true },
-        { headerName: "Quantity", field: "quantity", filter: true, sortable: true, resizable: true },
-        { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true }
-      ],
+      inventoryGridOptions: {
+        columnDefs: [
+          { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true },
+          { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true },
+          { headerName: "Quantity", field: "quantity", filter: true, sortable: true, resizable: true },
+          { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true }
+        ],
+        defaultColDef: {
+          resizable: true
+        },
+        rowModelType: 'infinite',
+        paginationPageSize: 10,
+        cacheBlockSize: 10,
+        maxBlocksInCache: 1
+      },
       supplyRequestData: [],
       inventoryData: [],
       supplyRequestDetail: {},
@@ -93,7 +105,7 @@ class RequestAndInventoryView extends BaseComponent {
   onSRGridReady(params) {
     this.setState({...this.state, supplyRequestTableApi: params.api});
     params.api.sizeColumnsToFit();
-    params.api.setDatasource(this.supplyRequestDataSource);
+    params.api.setDatasource(this.supplyRequestDataSource());
   }
 
   onInventoryGridReady(params) {
@@ -134,18 +146,38 @@ class RequestAndInventoryView extends BaseComponent {
   };
 
   supplyRequestDataSource() {
-    return {
+    let ds = {
       getRows: function(params) {
+        console.log(params);
         // Load supply requests
         SupplyRequestService.search(this.state.supplyRequestSearch).subscribe(resp => {
           if(resp.status === true) {
             this.setState({...this.state, supplyRequestData: resp.data});
-            params.successCallback(resp.data);
+            params.successCallback(resp.data, -1);
             return this.state.supplyRequestData.data;
           }
         });
       } 
     };
+    ds.getRows = ds.getRows.bind(this);
+    return ds;
+  }
+
+  inventoryDataSource() {
+    let ds = {
+      getRows: function(params) {
+        // Load inventories
+        InventoryService.search(this.state.inventorySearch).subscribe(resp => {
+          if(resp.status === true) {
+            this.setState({...this.state, supplyRequestData: resp.data});
+            params.successCallback(resp.data, -1);
+            return this.state.inventoryData.data;
+          }
+        });
+      } 
+    };
+    ds.getRows = ds.getRows.bind(this);
+    return ds;
   }
 
   render() {
@@ -225,7 +257,7 @@ class RequestAndInventoryView extends BaseComponent {
                 <AgGridReact
                     onGridReady={this.onInventoryGridReady}
                     rowData={this.state.inventoryData}
-                    columnDefs={this.state.inventoryTableColumnDefs}>
+                    gridOptions={this.state.inventoryGridOptions}>
                 </AgGridReact>
               </div>
             </CardBody>
