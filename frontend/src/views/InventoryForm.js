@@ -4,6 +4,7 @@ import { BaseComponent } from '../components/BaseComponent';
 import { InventoryService } from '../services/InventoryService';
 import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FormUtil from '../utils/form-util';
 
 import {
   Modal,
@@ -18,8 +19,8 @@ class InventoryForm extends BaseComponent {
     super(props);
     let inventory = {
       'user_id': '',
-      'supply_type': 'mask',
-      'quantity': 10,
+      'supply_type': '',
+      'quantity': 0,
       'status': '',
       'available_date': '',
       'price': 0,
@@ -40,7 +41,7 @@ class InventoryForm extends BaseComponent {
       inventory = props.inventory;
     }
 
-    this.state = { ...this.state, saveSuccess: null, isNew: props.isNew, inventory: inventory };
+    this.state = { ...this.state, saveSuccess: null, isNew: props.isNew, inventory: inventory, messages: [] };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleInventoryChange = this.handleInventoryChange.bind(this);
@@ -68,9 +69,23 @@ class InventoryForm extends BaseComponent {
   }
 
   saveInventory = event => {
-    event.preventDefault();
-    this.validate();
+    event.preventDefault();    
+    let inventory = this.state.inventory;
+    FormUtil.trimFields(inventory);
+    this.setState({...this.state, inventory: inventory});
+    if(this.state.inventory.supply_type_selection !== 'Other') {
+      
+      inventory.supply_type = this.state.supplyRequest.supply_type_selection;
+      inventory.supply_type_selection = undefined;
+      this.setState({...this.state, inventory: inventory});
+    }
     
+    let messages = this.validate(this.state.inventory);
+
+    if(messages.length !== 0) {
+      this.setState({...this.state, messages: messages});
+      return;
+    }
     if(this.state.isNew) {
       InventoryService.createInventory(this.state.inventory).subscribe(resp => {
         if(resp.status === true) {
@@ -91,8 +106,15 @@ class InventoryForm extends BaseComponent {
     
   }
 
-  validate() {
-
+  validate(inventory) {
+    let messages = [];
+    if(FormUtil.isEmpty(inventory.supply_type)) {
+      messages.push('Supply type is required');
+    }
+    if(FormUtil.isEmpty(inventory.quantity) || inventory.quantity <= 0) {
+      messages.push('Quantity is required and must be > 0');
+    }
+    return messages;
   }
   render() {
     
@@ -109,19 +131,73 @@ class InventoryForm extends BaseComponent {
           </ModalBody>
         </Modal>
 
+        {
+          this.state.messages.length > 0 ? 
+          <Alert color='danger'> <ul>
+            {
+              this.state.messages.map(message => {
+              return <li>{message}</li>
+              })
+            }
+          </ul></Alert> : ''
+        }
+        
         <Form onSubmit={this.createInventory}>
-          <FormGroup>
-            <Label>Supply Type</Label>
-            <Input type="text" name="supply_type" value={this.state.inventory.supply_type} onChange={this.handleInventoryChange}/>
-          </FormGroup>
-          <FormGroup>
-            <Label>Quantity</Label>
-            <Input type="number" name="quantity" value={this.state.inventory.quantity} onChange={this.handleInventoryChange}/>
-          </FormGroup>
-          <FormGroup>
-            <Label>Available Date</Label>
-            <Input type="date" name="available_date" value={this.state.inventory.available_date} onChange={this.handleInventoryChange}/>
-          </FormGroup>
+          <Row>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Supply Type</Label>
+                <Input type="select" name="supply_type_selection" value={this.state.inventory.supply_type_selection}  onChange={this.handleInventoryChange}>
+                  <option>Masks</option>
+                  <option>Gloves</option>
+                  <option>Face Shields</option>
+                  <option>Gowns</option>
+                  <option>Other</option>
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col xl={6} lg={6} md={6}>
+                { this.state.inventory.supply_type_selection === 'Other' ? 
+                <FormGroup>
+                  <Label>Custom Supply Type</Label> 
+                  <Input type="text" name="supply_type" value={this.state.inventory.supply_type} onChange={this.handleInventoryChange}/>
+                  </FormGroup>
+                   : '' }
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Quantity</Label>
+                <Input type="number" name="quantity" value={this.state.inventory.quantity} onChange={this.handleInventoryChange}/>
+              </FormGroup>
+            </Col>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Available Date</Label>
+                <Input type="date" name="available_date" value={this.state.inventory.available_date} onChange={this.handleInventoryChange}/>
+              </FormGroup>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Price</Label>
+                <Input type="number" name="price" value={this.state.inventory.price} onChange={this.handleInventoryChange}/>
+              </FormGroup>
+            </Col>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Status</Label>
+                <Input type="select" name="status" value={this.state.inventory.status}  onChange={this.handleInventoryChange}>
+                  <option>In Progress</option>
+                  <option>Ready</option>
+                </Input>
+              </FormGroup>
+            </Col>
+          </Row>
 
           <Row>
             <Col xl={6} lg={6} md={6}>

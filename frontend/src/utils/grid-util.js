@@ -1,6 +1,5 @@
 let GridUtil = {
     transformGridParams: function(params) {
-        console.log(params);
         let sort = {};
         if(params.sortModel.length > 0) {
           sort[params.sortModel[0].colId] = params.sortModel[0].sort === 'asc' ? 1 : -1;

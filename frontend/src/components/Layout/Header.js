@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCog, faSignOutAlt, faUser, faQuestionCircle, faEnvelopeSquare } from '@fortawesome/free-solid-svg-icons';
+import { faUserCog, faSignOutAlt, faUser, faQuestionCircle, faEnvelopeSquare, faComments } from '@fortawesome/free-solid-svg-icons';
 import { UserCard } from 'components/Card';
 import React from 'react';
 import { AuthenticationService } from '../../services/AuthenticationService';
@@ -14,6 +14,9 @@ import {
   NavLink,
   Popover,
   PopoverBody,
+  Modal,
+  ModalBody,
+  ModalHeader,
 } from 'reactstrap';
 import bn from 'utils/bemnames';
 
@@ -22,6 +25,9 @@ const bem = bn.create('header');
 class Header extends React.Component {
   state = {
     isOpenUserCardPopover: false,
+    isOpenHelpModal: false,
+    isOpenMessagesModal: false,
+    isOpenProfileModal: false
   };
 
   constructor(props) {
@@ -32,6 +38,24 @@ class Header extends React.Component {
   toggleUserCardPopover = () => {
     this.setState({
       isOpenUserCardPopover: !this.state.isOpenUserCardPopover,
+    });
+  };
+
+  toggleOpenHelpModal = () => {
+    this.setState({
+      isOpenHelpModal: !this.state.isOpenHelpModal,
+    });
+  };
+
+  toggleOpenMessagesModal = () => {
+    this.setState({
+      isOpenMessagesModal: !this.state.isOpenMessagesModal,
+    });
+  };
+
+  toggleOpenProfileModal = () => {
+    this.setState({
+      isOpenProfileModal: !this.state.isOpenProfileModal,
     });
   };
 
@@ -73,13 +97,13 @@ class Header extends React.Component {
                   className="border-light"
                 >
                   <ListGroup flush>
-                    <ListGroupItem tag="button" action className="border-light" onClick={this.toggleUserCardPopover}>
+                    <ListGroupItem tag="button" action className="border-light" onClick={this.toggleOpenProfileModal}>
                       <FontAwesomeIcon icon={faUser}/> &nbsp;Profile
                     </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light" onClick={this.toggleUserCardPopover}>
-                      <FontAwesomeIcon icon={faEnvelopeSquare}/> &nbsp;Messages
+                    <ListGroupItem tag="button" action className="border-light" onClick={this.toggleOpenMessagesModal}>
+                      <FontAwesomeIcon icon={faComments}/> &nbsp;Messages
                     </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light" onClick={this.toggleUserCardPopover}>
+                    <ListGroupItem tag="button" action className="border-light" onClick={this.toggleOpenHelpModal}>
                       <FontAwesomeIcon icon={faQuestionCircle}/> &nbsp;Help
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light" onClick={this.logout}>
@@ -91,6 +115,50 @@ class Header extends React.Component {
             </Popover>
           </NavItem>
         </Nav>
+
+
+        <Modal
+          isOpen={this.state.isOpenHelpModal}
+          toggle={this.toggleOpenHelpModal}>
+          <ModalHeader toggle={this.toggleOpenHelpModal}>
+          <FontAwesomeIcon size='md' icon={faQuestionCircle}/> &nbsp;Help
+          </ModalHeader>
+          <ModalBody>
+              <p>MHM is an application developed to enable our Healthcare Providers / medical professionals 
+              to add their demands and volunteers to add their inventory. The system also allows users to message and 
+              collaborate with others. This application is developed as a joint effort by a small group of engineers and volunteers 
+              to support our medical professionals in difficult times.
+              </p>
+
+              <p>
+                For questions, please email us at makershelpingmedics@gmail.com.
+              </p>
+          </ModalBody>
+        </Modal>
+
+        <Modal
+          isOpen={this.state.isOpenMessagesModal}
+          toggle={this.toggleOpenMessagesModal}>
+          <ModalHeader toggle={this.toggleOpenMessagesModal}>
+          <FontAwesomeIcon size='md' icon={faComments}/> &nbsp;Messages
+          </ModalHeader>
+          <ModalBody>
+              <p>Coming soon!
+              </p>
+          </ModalBody>
+        </Modal>
+
+        <Modal
+          isOpen={this.state.isOpenProfileModal}
+          toggle={this.toggleOpenProfileModal}>
+          <ModalHeader toggle={this.toggleOpenProfileModal}>
+          <FontAwesomeIcon size='md' icon={faUser}/> &nbsp;Profile
+          </ModalHeader>
+          <ModalBody>
+              <p>Coming soon!
+              </p>
+          </ModalBody>
+        </Modal>
       </Navbar>
     );
   }

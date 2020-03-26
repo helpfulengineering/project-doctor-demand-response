@@ -3,11 +3,14 @@ import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { BaseComponent } from '../components/BaseComponent';
 import { SupplyRequestService } from '../services/SupplyRequestService';
 import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import FormUtil from '../utils/form-util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
   Modal,
-  ModalBody
+  ModalBody,
+  Row,
+  Col
 } from 'reactstrap';
 
 class SupplyRequestForm extends BaseComponent {
@@ -16,7 +19,8 @@ class SupplyRequestForm extends BaseComponent {
     super(props);
     let supplyRequest = {
       'user_id': '',
-      'supply_type': 'mask',
+      'supply_type': '',
+      'supply_type_selection': 'Masks',
       'quantity': 10,
       'request_date': '',
       'fulfillment_date': null,
@@ -28,7 +32,7 @@ class SupplyRequestForm extends BaseComponent {
       supplyRequest = props.supplyRequest;
     }
 
-    this.state = { ...this.state, saveSuccess: null, isNew: props.isNew, supplyRequest: supplyRequest };
+    this.state = { ...this.state, saveSuccess: null, isNew: props.isNew, supplyRequest: supplyRequest, messages: [] };
 
     this.handleChange = this.handleChange.bind(this);
     this.handlesupplyRequestChange = this.handlesupplyRequestChange.bind(this);
@@ -57,8 +61,24 @@ class SupplyRequestForm extends BaseComponent {
 
   saveSupplyRequest = event => {
     event.preventDefault();
-    this.validate();
+    let supplyRequest = this.state.supplyRequest;
+    FormUtil.trimFields(supplyRequest);
+    this.setState({...this.state, supplyRequest: supplyRequest});
     
+    if(this.state.supplyRequest.supply_type_selection !== 'Other') {
+      
+      supplyRequest.supply_type = this.state.supplyRequest.supply_type_selection;
+      supplyRequest.supply_type_selection = undefined;
+      this.setState({...this.state, supplyRequest: supplyRequest});
+    }
+    
+    let messages = this.validate(this.state.supplyRequest);
+
+    if(messages.length !== 0) {
+      this.setState({...this.state, messages: messages});
+      return;
+    }
+
     if(this.state.isNew) {
       SupplyRequestService.createSupplyRequest(this.state.supplyRequest).subscribe(resp => {
         if(resp.status === true) {
@@ -79,8 +99,15 @@ class SupplyRequestForm extends BaseComponent {
     
   }
 
-  validate() {
-
+  validate(sr) {
+    let messages = [];
+    if(FormUtil.isEmpty(sr.supply_type)) {
+      messages.push('Supply type is required');
+    }
+    if(FormUtil.isEmpty(sr.quantity) || sr.quantity <= 0) {
+      messages.push('Quantity is required and must be > 0');
+    }
+    return messages;
   }
   render() {
     
@@ -97,22 +124,60 @@ class SupplyRequestForm extends BaseComponent {
           </ModalBody>
         </Modal>
 
-        <Form onSubmit={this.createSupplyRequest}>
-          <FormGroup>
-            <Label>Supply Type</Label>
-            <Input type="text" name="supply_type" value={this.state.supplyRequest.supply_type} onChange={this.handlesupplyRequestChange}/>
-          </FormGroup>
-          <FormGroup>
-            <Label>Quantity</Label>
-            <Input type="number" name="quantity" value={this.state.supplyRequest.quantity} onChange={this.handlesupplyRequestChange}/>
-          </FormGroup>
-          <FormGroup>
-            <Label>Needed By</Label>
-            <Input type="date" name="needed_by" value={this.state.supplyRequest.needed_by} onChange={this.handlesupplyRequestChange}/>
-          </FormGroup>
+        {
+          this.state.messages.length > 0 ? 
+          <Alert color='danger'> <ul>
+            {
+              this.state.messages.map(message => {
+              return <li>{message}</li>
+              })
+            }
+          </ul></Alert> : ''
+        }
+        <Form onSubmit={this.createSupplyRequest}>          
+          <Row>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Supply Type</Label>
+                <Input type="select" name="supply_type_selection" value={this.state.supplyRequest.supply_type_selection}  onChange={this.handlesupplyRequestChange}>
+                  <option>Masks</option>
+                  <option>Gloves</option>
+                  <option>Face Shields</option>
+                  <option>Gowns</option>
+                  <option>Other</option>
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col xl={6} lg={6} md={6}>
+              { this.state.supplyRequest.supply_type_selection === 'Other' ? 
+                <FormGroup>
+                  <Label>Custom Supply Type</Label> 
+                  <Input type="text" name="supply_type" value={this.state.supplyRequest.supply_type} onChange={this.handlesupplyRequestChange}/>
+                  </FormGroup>
+                   : '' }
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xl={6} lg={6} md={6}>
+              <FormGroup>
+                <Label>Quantity</Label>
+                <Input type="number" name="quantity" value={this.state.supplyRequest.quantity} onChange={this.handlesupplyRequestChange}/>
+              </FormGroup>
+            </Col>
+            <Col xl={6} lg={6} md={6}>
+              <Label>Needed By</Label>
+              <Input type="date" name="needed_by" value={this.state.supplyRequest.needed_by} onChange={this.handlesupplyRequestChange}/>
+            </Col>
+          </Row>
+          
           <FormGroup>
             <Label>Urgency</Label>
-            <Input type="text" name="urgency" value={this.state.supplyRequest.urgency} onChange={this.handlesupplyRequestChange}/>
+            <Input type="select" name="urgency" value={this.state.supplyRequest.urgency}  onChange={this.handlesupplyRequestChange}>
+              <option>Normal</option>
+              <option>High</option>
+              <option>Critical</option>
+            </Input>
           </FormGroup>
           <FormGroup>
             <Label>Comments</Label>

@@ -21,6 +21,7 @@
     "react-component-queries": "^2.3.0",
     "react-d3-map": "^0.8.3",
     "react-dom": "^16.8.4",
+    "react-form-validator-core": "^0.6.5",
     "react-ga": "^2.5.7",
     "react-icons": "^3.5.0",
     "react-infinite-calendar": "^2.3.1",
