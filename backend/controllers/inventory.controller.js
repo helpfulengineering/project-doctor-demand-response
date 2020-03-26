@@ -27,6 +27,7 @@ let inventoryController = {
             foreignField: "user_name",
             as: "user"
         };
+        criteria.unwind = { path : "$user"};
         
         let data = await dataAccess.search('inventory', criteria );
         data.forEach(rec => {

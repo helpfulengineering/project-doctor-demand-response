@@ -29,6 +29,8 @@ let supplyRequestController = {
             foreignField: "user_name",
             as: "user"
         };
+        criteria.unwind = { path : "$user"};
+
         let data = await dataAccess.search('supply_request', criteria );
         await data.forEach(rec => {
             if(rec.user.length > 0) {

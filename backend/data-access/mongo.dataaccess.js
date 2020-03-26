@@ -86,8 +86,10 @@ let mongoDataAccess = {
             ).sort(criteria.sort).skip(criteria.startRow > 0 ? criteria.startRow : 0).limit(criteria.endRow - criteria.startRow);*/
 
             let pipelines = [
+                { $lookup: criteria.lookup },
+                { $unwind: criteria.unwind },
                 { $match: mongoDataAccess.constructQuery(criteria)},
-                { $lookup: criteria.lookup }];
+            ];
 
             if(Object.keys(criteria.sort).length > 0) {
                 pipelines.push({ $sort: criteria.sort });
