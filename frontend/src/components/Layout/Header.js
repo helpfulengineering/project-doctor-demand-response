@@ -131,7 +131,7 @@ class Header extends React.Component {
               </p>
 
               <p>
-                For general enquires, please email us at support@temp.com. For access related questions, please email us at admin@admin.com.
+                For questions, please email us at makershelpingmedics@gmail.com.
               </p>
           </ModalBody>
         </Modal>
