@@ -44,10 +44,10 @@ class RequestAndInventoryView extends BaseComponent {
           { headerName: "Name", field: "org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Quantity", field: "quantity", sortable: true },
-          { headerName: "Urgency", field: "urgency", filter: true, sortable: true, filterParams: {filterOptions: ['equals'], suppressAndOrCondition: true} },
+          { headerName: "Urgency", field: "urgency", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Needed By", field: "needed_by", sortable: true},
           { headerName: "Request Date", field: "request_date", sortable: true},
-          { headerName: "Status", field: "status", filter: true, sortable: true, filterParams: {filterOptions: ['equals'], suppressAndOrCondition: true} }
+          { headerName: "Status", field: "status", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} }
         ],
         defaultColDef: {
           resizable: true
@@ -59,10 +59,10 @@ class RequestAndInventoryView extends BaseComponent {
       },
       inventoryGridOptions: {
         columnDefs: [
-          { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true },
-          { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true },
+          { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true}  },
           { headerName: "Quantity", field: "quantity", filter: true, sortable: true, resizable: true },
-          { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true }
+          { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true,filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} }
         ],
         defaultColDef: {
           resizable: true
