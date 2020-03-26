@@ -1,0 +1,447 @@
+db.getCollection('inventory').insertMany([
+  {
+    "supply_type": "Mask",
+    "quantity": 100,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 110,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 120,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 130,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 140,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 150,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 160,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 170,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 180,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 190,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 200,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 210,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 220,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 230,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 240,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 250,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 180,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 190,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 200,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 210,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 220,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 230,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 240,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 50,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 140,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 150,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 160,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Face shield",
+    "quantity": 170,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 180,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 190,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 160,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 170,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 180,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 190,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 200,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 210,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 240,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 250,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 210,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Mask",
+    "quantity": 50,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 50,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 60,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 70,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 160,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 170,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 180,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 190,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 200,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 210,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 40,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gowns",
+    "quantity": 40,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 50,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 50,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 60,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 70,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 80,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 60,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Beds",
+    "quantity": 70,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 80,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 125,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 140,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 150,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 210,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 50,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 50,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 60,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 70,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Gloves",
+    "quantity": 40,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 60,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 70,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 80,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 125,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 140,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 210,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 40,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 40,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 50,
+    "status": "Ready"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 50,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 60,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 70,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 40,
+    "status": "In Progress"
+  },
+  {
+    "supply_type": "Sanitizers",
+    "quantity": 40,
+    "status": "In Progress"
+  }
+]);

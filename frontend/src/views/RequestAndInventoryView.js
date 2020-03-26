@@ -83,6 +83,7 @@ class RequestAndInventoryView extends BaseComponent {
     this.onSRGridReady = this.onSRGridReady.bind(this);
     this.onInventoryGridReady = this.onInventoryGridReady.bind(this);
     this.supplyRequestDataSource = this.supplyRequestDataSource.bind(this);
+    this.inventoryDataSource = this.inventoryDataSource.bind(this);
   }
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
@@ -97,15 +98,9 @@ class RequestAndInventoryView extends BaseComponent {
 
   onInventoryGridReady(params) {
     this.setState({...this.state, inventoryTableApi: params.api});
+    params.api.sizeColumnsToFit();
     // Load inventories
-    InventoryService.search(this.state.inventorySearch).subscribe(resp => {
-      if(resp.status === true) {
-        this.setState({...this.state, inventoryData: resp.data});
-        params.api.sizeColumnsToFit();
-      } else {
-        // Show error message
-      }
-    });
+    params.api.setDatasource(this.inventoryDataSource());
   }
 
   supplyRequestModal(isNew) {
@@ -155,7 +150,7 @@ class RequestAndInventoryView extends BaseComponent {
         // Load inventories
         InventoryService.search(GridUtil.transformGridParams(params)).subscribe(resp => {
           if(resp.status === true) {
-            this.setState({...this.state, supplyRequestData: resp.data});
+            this.setState({...this.state, inventoryData: resp.data});
             params.successCallback(resp.data, -1);
             return this.state.inventoryData.data;
           }
