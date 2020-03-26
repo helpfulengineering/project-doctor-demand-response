@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Form, FormGroup, Input, Label, Row, Col, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Row, Col, Alert, Card, CardBody, CardImg } from 'reactstrap';
 import { withRouter } from "react-router-dom";
 import { BaseComponent } from '../components/BaseComponent';
 import { AuthenticationService } from '../services/AuthenticationService';
+import logoImage from '../assets/img/logo/Original.png';
 
 class AuthForm extends BaseComponent {
 
@@ -49,52 +50,62 @@ class AuthForm extends BaseComponent {
   render() {
     
     return (
-      <Form onSubmit={this.login}>
-        {
-          <div className="text-center pb-4">
-            <h5 className="p-2 text-light bg-gradient-secondary-theme-right">COVID19 Demand Response</h5>
-          </div>
-        }
-        {
-          this.state.loginFailed == true ? 
-          <Alert color="danger">
-            Login failed due to invalid credentials.
-          </Alert> : '' 
-        }
-        <FormGroup>
-          <Label>User Name</Label>
-          <Input type="text" name="user_name" value={this.state.loginInfo.user_name} onChange={this.handleLoginInfoChange}/>
-        </FormGroup>
-        <FormGroup>
-          <Label>Password</Label>
-          <Input type="password" name="password" value={this.state.loginInfo.password} onChange={this.handleLoginInfoChange} />
-        </FormGroup>
-       
-        <hr />
-        <Row>
-          <Col xl={4} lg={4} md={4}>
-            <Button
-              size="md"
-              block
-              className="bg-gradient-secondary-theme-right border-0"
-              onClick={this.login}>
-              Login
-            </Button>
-          </Col>
-          <Col xl={4} lg={4} md={4}>
-            Don't have account? &nbsp;&nbsp;
-            <Button
-              size="sm"
-              color="primary"
-              outline>
-              Register
-            </Button>
-          </Col>
-          <Col xl={4} lg={4} md={4}>
-            <Button outline color="link" className="text-primary">Forgot Password?</Button>
+      <Row className="border-0">
+        <Col md={3} sm={3} xs={3} className="border-0 d-flex mb-3 align-items-center">
+          <CardImg
+              className="card-img-left"
+              src={logoImage}
+            />
+        </Col>
+        <Col md={9} sm={9} xs={9} className="mb-3 border-0">
+          <Card className="flex-row border-0">
+            <CardBody>
+                <Form onSubmit={this.login}>
+                  
+                  {
+                    this.state.loginFailed === true ? 
+                    <Alert color="danger">
+                      Login failed due to invalid credentials.
+                    </Alert> : '' 
+                  }
+                  <FormGroup>
+                    <Label>User Name</Label>
+                    <Input type="text" name="user_name" value={this.state.loginInfo.user_name} onChange={this.handleLoginInfoChange}/>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Password</Label>
+                    <Input type="password" name="password" value={this.state.loginInfo.password} onChange={this.handleLoginInfoChange} />
+                  </FormGroup>
+                
+                  <hr />
+                  <Row className='p-0'>
+                    <Col xl={3} lg={3} md={3}>
+                      <Button
+                        size="md"
+                        block
+                        color="primary"
+                        className="border-0"
+                        onClick={this.login}>
+                        Login
+                      </Button>
+                    </Col>
+                    <Col xl={6} lg={6} md={6} className="p-0">
+                      Don't have account? &nbsp;&nbsp;
+                      <Button
+                        color="secondary"
+                        >
+                        Register
+                      </Button>
+                    </Col>
+                    <Col xl={3} lg={3} md={3} className="d-flex justify-content-center p-0">
+                      <Button outline color="link" size="sm" className="text-primary">Forgot Password?</Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </CardBody>
+            </Card>
           </Col>
         </Row>
-      </Form>
     );
   }
 }

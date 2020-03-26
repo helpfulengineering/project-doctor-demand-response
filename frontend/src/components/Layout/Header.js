@@ -74,12 +74,12 @@ class Header extends React.Component {
   render() {
     
     return (
-      <Navbar light expand className={bem.b('bg-white')}>
+      <Navbar light expand className={bem.b('bg-secondary')}>
         <Nav navbar className={bem.e('nav-right')}>
           
           <NavItem>
             <NavLink id="Popover2">
-            <FontAwesomeIcon icon={faUserCog} className="text-secondary" size="lg" onClick={this.toggleUserCardPopover}/>
+            <FontAwesomeIcon icon={faUserCog} className="text-light" size="lg" onClick={this.toggleUserCardPopover}/>
             </NavLink>
             <Popover
               placement="bottom-end"
