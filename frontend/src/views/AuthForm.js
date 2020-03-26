@@ -5,6 +5,8 @@ import { Button, Form, FormGroup, Input, Label, ButtonGroup, Row, Col, Alert,Car
   CardImg } from 'reactstrap';
 import { BaseComponent } from '../components/BaseComponent';
 import { UserService } from '../services/UserService';
+import FormUtil from '../utils/form-util';
+import { withRouter } from "react-router-dom";
 
 class AuthForm extends BaseComponent {
 
@@ -37,6 +39,7 @@ class AuthForm extends BaseComponent {
     this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.updateUserType = this.updateUserType.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   handleUserInfoChange(event) {
@@ -56,11 +59,20 @@ class AuthForm extends BaseComponent {
     this.setState({...this.state, userInfo: userInfo});
   }
 
+  redirectToLogin(event) {
+    event.preventDefault();
+
+    this.props.history.push("/login");
+  }
+
   registerUser = event => {
     event.preventDefault();
-    this.validate();
     this.state.userInfo.user_name = this.state.userInfo.email;
     
+    let userInfo = this.state.userInfo;
+    FormUtil.trimFields(userInfo);
+
+    this.validate(userInfo);
     UserService.registerUser(this.state.userInfo).subscribe(resp => {
       if(resp.status === true) {
         this.setState({...this.state, registrationSuccess: true});
@@ -92,12 +104,8 @@ class AuthForm extends BaseComponent {
                     {
                       this.state.registrationSuccess === true ? 
                       <Alert color="success">
-                        You are successfully registered! Please proceed with <Button
-                          size="sm"
-                          color="primary"
-                          outline>
-                          Login
-                        </Button>
+                        An activation email has been sent to you email. 
+                        Please follow the directions in email to activate your account!
                       </Alert> : '' 
                     }
                     {
@@ -224,13 +232,13 @@ class AuthForm extends BaseComponent {
                           block
                           color="primary"
                           className="border-0"
-                          onClick={this.registerUser}>
+                          >
                           Signup
                         </Button>
                       </Col>
                       <Col xl={6} lg={6} md={6} className="d-flex justify-content-end align-items-center">
                         Already have account? &nbsp;&nbsp;
-                        <Button outline color="link" className="text-primary">Login</Button>
+                        <Button outline color="link" className="text-primary" onClick={this.redirectToLogin}>Login</Button>
                       </Col>
                     </Row>
                   </Form>
@@ -244,4 +252,4 @@ class AuthForm extends BaseComponent {
   }
 }
 
-export default AuthForm;
+export default withRouter(AuthForm);
