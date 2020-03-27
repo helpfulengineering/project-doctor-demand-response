@@ -65,7 +65,10 @@ class RequestAndInventoryView extends BaseComponent {
           { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true}  },
           { headerName: "Quantity", field: "quantity", filter: true, sortable: true, resizable: true },
-          { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true,filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} }
+          { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true,filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "City", field: "user.city", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "State", field: "user.state", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Zip Code", field: "user.zipcode", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} }
         ],
         defaultColDef: {
           resizable: true
@@ -87,6 +90,8 @@ class RequestAndInventoryView extends BaseComponent {
     this.onInventoryGridReady = this.onInventoryGridReady.bind(this);
     this.supplyRequestDataSource = this.supplyRequestDataSource.bind(this);
     this.inventoryDataSource = this.inventoryDataSource.bind(this);
+    this.toggleSRDetailModal = this.toggleSRDetailModal.bind(this);
+    this.toggleInventoryDetailModal = this.toggleInventoryDetailModal.bind(this);
   }
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
@@ -95,15 +100,14 @@ class RequestAndInventoryView extends BaseComponent {
 
   onSRGridReady(params) {
     this.setState({...this.state, supplyRequestTableApi: params.api});
-    params.api.sizeColumnsToFit();
     params.api.setDatasource(this.supplyRequestDataSource());
+    params.api.sizeColumnsToFit();
   }
 
   onInventoryGridReady(params) {
     this.setState({...this.state, inventoryTableApi: params.api});
-    params.api.sizeColumnsToFit();
-    // Load inventories
     params.api.setDatasource(this.inventoryDataSource());
+    params.api.sizeColumnsToFit();
   }
 
   supplyRequestModal(isNew) {
@@ -114,10 +118,25 @@ class RequestAndInventoryView extends BaseComponent {
     this.setState({...this.state, isNewInventory: isNew, inventoryModal: true});
   }
 
-  toggleSupplyRequestModal= modalType => () => {
+  toggleSupplyRequestModal = modalType => () => {
     if (!modalType) {
       return this.setState({ ...this.state,
         supplyRequestModal: !this.state.supplyRequestModal,
+      });
+    }
+  };
+
+  toggleInventoryDetailModal = modalType => () => {
+    if (!modalType) {
+      return this.setState({ ...this.state,
+        inventoryDetailModal: !this.state.inventoryDetailModal,
+      });
+    }
+  };
+  toggleSRDetailModal = modalType => () => {
+    if (!modalType) {
+      return this.setState({ ...this.state,
+        supplyRequestDetailModal: !this.state.supplyRequestDetailModal,
       });
     }
   };
@@ -172,7 +191,7 @@ class RequestAndInventoryView extends BaseComponent {
         breadcrumbs={[{ name: 'Requests and Inventory', active: true }]}
       >
         <Row>
-          <Col lg={8} md={8} sm={8} xs={8}>
+          <Col lg={12} md={12} sm={12} xs={12}>
           <Card>
             <CardHeader>
                 <div className="d-flex justify-content-between align-items-center">
@@ -201,24 +220,10 @@ class RequestAndInventoryView extends BaseComponent {
             </CardBody>
             </Card>
           </Col>
-
-          <Col lg="4" md="4" sm="4" xs="4">
-            <Card className="bg-light">
-              <CardHeader>
-                <div className="align-items-center">
-                    <FontAwesomeIcon size='lg' icon={faList} className='text-secondary text-bold' />
-                    <strong className="pl-3">Supply request Details</strong>
-                </div>
-              </CardHeader>
-              <CardBody>
-                Details
-              </CardBody>
-            </Card>
-          </Col>
         </Row>
 
         <Row>
-          <Col lg={8} md={8} sm={8} xs={8}>
+          <Col lg={12} md={12} sm={12} xs={12}>
           <Card>
             <CardHeader>
                 <div className="d-flex justify-content-between align-items-center">
@@ -247,20 +252,6 @@ class RequestAndInventoryView extends BaseComponent {
             </CardBody>
             </Card>
           </Col>
-
-          <Col lg="4" md="4" sm="4" xs="4">
-            <Card className="bg-light">
-              <CardHeader>
-                <div className="align-items-center">
-                    <FontAwesomeIcon size='lg' icon={faList} className='text-info text-bold' />
-                    <strong className="pl-3">Inventory Details</strong>
-                </div>
-              </CardHeader>
-              <CardBody>
-                Details
-              </CardBody>
-            </Card>
-          </Col>
         </Row>
         
         <Modal
@@ -278,6 +269,24 @@ class RequestAndInventoryView extends BaseComponent {
           <ModalHeader toggle={this.toggleInventoryModal()}>Inventory</ModalHeader>
           <ModalBody>
             <InventoryForm inventory = {{}} isNew = {this.state.isNewInventory} />
+          </ModalBody>
+        </Modal>
+        
+        <Modal
+          isOpen={this.state.supplyRequestDetailModal}
+          toggle={this.toggleSRDetailModal()}>
+          <ModalHeader toggle={this.toggleSRDetailModal()}>Supply Request Details</ModalHeader>
+          <ModalBody>
+           
+          </ModalBody>
+        </Modal>
+
+        <Modal
+          isOpen={this.state.inventoryDetailModal}
+          toggle={this.toggleInventoryDetailModal()}>
+          <ModalHeader toggle={this.toggleInventoryDetailModal()}>Inventory Details</ModalHeader>
+          <ModalBody>
+           
           </ModalBody>
         </Modal>
       </Page>

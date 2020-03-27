@@ -12,6 +12,7 @@ var inventoryRouter = require('./routes/inventory');
 var auth = require("./security/auth");
 var dbMgr = require('./data-access/db-manager');
 var cors = require('cors');
+var mailer = require('express-mailer');
 
 var app = express();
 
@@ -58,13 +59,45 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-MongoClient.connect(app.constants.db.url, function (err, database) {
+MongoClient.connect(app.constants.db.url, async function (err, database) {
   if (err) throw err;
   dbMgr.dbConnection = database.db(app.constants.db.database);
-  dbMgr.dbConnection.collection('users').find().toArray(function (err, result) {
-    if (err) throw err;
-    console.log('Successfully connect to Mongo instance at ' + app.constants.db.url);
-  })
+  await initializeEmailConfig(dbMgr.dbConnection);
+  await initializeCommonConfig(dbMgr.dbConnection);
 });
+
+let initializeEmailConfig = async function(dbConnection) {
+  await dbConnection.collection('sys_params').findOne({'name': 'email_config'}).then(email_config => {
+    
+    app.email_config = email_config;
+
+    mailer.extend(app, {
+      from: email_config.from,
+      host: email_config.host, // hostname
+      secureConnection: true, // use SSL
+      port: 465, // port for secure SMTP
+      transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+      auth: {
+        user: email_config.auth_user,
+        pass: email_config.auth_password
+      }
+    });
+
+    console.log('Successfully loaded email config ' + JSON.stringify(email_config));
+  }).catch(err => {
+    console.log(err);
+    throw err;
+  });
+}
+
+let initializeCommonConfig = async function(dbConnection) {
+  await dbConnection.collection('sys_params').findOne({'name': 'common_config'}).then(common_config => {
+    app.common_config = common_config;
+    console.log('Loaded common config ' + JSON.stringify(common_config));
+  }).catch(err => {
+    console.log(err);
+    throw err;
+  });
+}
 
 module.exports = app;

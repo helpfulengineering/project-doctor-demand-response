@@ -5,8 +5,8 @@ var auth = require("../security/auth");
 
 // Register Account
 router.put('/register', function(req, res, next) {
-  userController.registerUser(req, res);
-  res.send({status: true});
+  let status = userController.registerUser(req, res);
+  res.send({status: status});
 });
 
 // Un-Register Account

@@ -21,6 +21,8 @@ Forgot password, new form to provide user id, click continue, sends a email with
 5 incorrect login attempts mark user record to 'suspended'
 	- if backend returns user is inactive, then show message that 'This user account is suspended due to numerous login attempts. Please reset your password using Forget Password to proceed.'
 	
+Proper data type for all fields - quantity is number, dates, etc
+
 Update functionality for supply request and inventory
 	- Users should see a edit button in the sup. req table for their own requests.
 	- Click edit -> same supply request create form opens with selected req data populated. Hit save and it updates the DB
