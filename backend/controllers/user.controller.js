@@ -1,11 +1,13 @@
-var dataAccess = require('../data-access/mongo.dataaccess');
-
+const dataAccess = require('../data-access/mongo.dataaccess');
+const bcrypt = require('bcryptjs');
 // Regular users must only be able to modify / delete their own profile
 // Admin - full access
-let userController = {
-    registerUser: function(req, res) {
-        
-        dataAccess.add('users', req.body);
+const userController = {
+    registerUser: async function({ body: user }, res) {
+        validateUserRequest(user);
+        await hashPassword(user);
+
+        dataAccess.add('users', user);
     },
     unRegisterUser: function(req, res) {
         // Access restriction
@@ -30,7 +32,7 @@ let userController = {
         validateUsername(user_name);
         let user = await dataAccess.find('users', { user_name });
 
-        verifyPassword(user, password);
+        await verifyPassword(user, password);
         return user;
     },
     search: async function(req, res) {
@@ -55,14 +57,54 @@ let userController = {
     }
 };
 
+function validateUserRequest(userRequest){
+    const requiredFields = [
+        'org_name',
+        'type',
+        'user_name',
+        'password',
+        'first_name',
+        'last_name',
+        'description',
+        'address_line1',
+        'address_line2',
+        'city',
+        'state',
+        'country',
+        'zipcode',
+        'latitude',
+        'longitude',
+        'phone',
+        'alternate_phone',
+        'email',
+        'alternate_email'
+    ];
+
+    const keys = new Set(Object.keys(userRequest));
+
+    requiredFields.forEach(key => {
+        if(!keys.has(key)){
+            throw Error(`User requires ${key} field`);
+        }
+    })
+}
+
+async function hashPassword(user){
+    const password = user.password;
+    delete user.password;
+    delete user.passwordDupe;
+
+    user.passwordHash = await bcrypt.hash(password, 10);
+}
+
 function validateUsername(user_name){
     if(typeof(user_name) !== 'string' || user_name.length === 0) {
         throw Error('Invalid credentials');
     }
 }
 
-function verifyPassword(user, password){
-    if(!user || password !== user.password) {
+async function verifyPassword(user, password){
+    if(!user || !(await bcrypt.compare(password, user.passwordHash))) {
         throw Error('Invalid credentials');
     }
 }

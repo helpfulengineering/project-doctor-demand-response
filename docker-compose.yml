@@ -9,7 +9,7 @@ services:
       - 9229:9229
     volumes:
       - ./backend:/app:delegated
-      - /app/node_modules
+      - /app/node_modules/node-sass
     environment:
       MONGO_URL: mongodb://mongo
     depends_on:
@@ -21,7 +21,7 @@ services:
       - 8080:3000
     volumes:
       - ./frontend:/app:delegated
-      - /app/node_modules
+      - /app/node_modules/node-sass
     environment:
       BACKEND_URL: http://backend:3000
     depends_on:
