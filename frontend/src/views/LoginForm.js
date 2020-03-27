@@ -18,12 +18,18 @@ class AuthForm extends BaseComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleLoginInfoChange = this.handleLoginInfoChange.bind(this);
     this.login = this.login.bind(this);
+    this.redirectToSignup = this.redirectToSignup.bind(this);
   }
 
   handleLoginInfoChange(event) {
     let loginInfo = this.state.loginInfo;
     loginInfo[event.target.name] = event.target.value;
     this.setState({...this.state, loginInfo: loginInfo});
+  }
+
+  redirectToSignup(event) {
+    event.preventDefault();
+    this.props.history.push("/signup");
   }
 
   handleChange(event) {
@@ -93,8 +99,9 @@ class AuthForm extends BaseComponent {
                       Don't have account? &nbsp;&nbsp;
                       <Button
                         color="secondary"
+                        onClick={this.redirectToSignup}
                         >
-                        Register
+                        Signup
                       </Button>
                     </Col>
                     <Col xl={3} lg={3} md={3} className="d-flex justify-content-center p-0">

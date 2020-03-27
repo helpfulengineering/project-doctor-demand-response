@@ -1,11 +1,13 @@
 var express = require('express');
 var dataAccess = require('../data-access/mongo.dataaccess');
+var ObjectId = require('mongodb').ObjectID;
 
 // Regular users must only be able to modify / delete their supply requests
 // Admin - full access
 let supplyRequestController = {
     add: function(req, res) {
-        dataAccess.add('supply_request', req.body);
+        let supplyRequest = req.body;
+        dataAccess.add('supply_request', supplyRequest);
     },
     update: function(req, res) {
 
@@ -20,7 +22,21 @@ let supplyRequestController = {
         return data;
     },
     search: async function(req, res) {
-        let data = await dataAccess.search('supply_request', req.body);
+        let criteria = req.body;
+        criteria.lookup = {
+            from: "users",
+            localField: "user_name",
+            foreignField: "user_name",
+            as: "user"
+        };
+        criteria.unwind = { path : "$user"};
+
+        let data = await dataAccess.search('supply_request', criteria );
+        await data.forEach(rec => {
+            if(rec.user.length > 0) {
+                rec.user = rec.user[0];
+            }
+        });
         return data;
     },
     initializeForUpdate: function(supply_request) {

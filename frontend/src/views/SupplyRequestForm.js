@@ -63,6 +63,7 @@ class SupplyRequestForm extends BaseComponent {
     event.preventDefault();
     let supplyRequest = this.state.supplyRequest;
     FormUtil.trimFields(supplyRequest);
+    supplyRequest.user_name = SupplyRequestService.getUserContext().user_name;
     this.setState({...this.state, supplyRequest: supplyRequest});
     
     if(this.state.supplyRequest.supply_type_selection !== 'Other') {
