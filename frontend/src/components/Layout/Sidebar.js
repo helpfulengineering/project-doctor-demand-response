@@ -1,7 +1,7 @@
-import sidebarBgImage from 'assets/img/sidebar/sidebar-4.jpg';
 import React from 'react';
 import { faStethoscope, faChartPie, faIndustry, faUserShield, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import logoHomeImage from '../../assets/img/logo/Original on Transparent.png';
 
 import {
   MdAccountCircle,
@@ -18,8 +18,6 @@ import {
   MdViewCarousel,
   MdViewDay,
   MdViewList,
-  MdWeb,
-  MdWidgets,
 } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import {
@@ -31,12 +29,12 @@ import {
   NavLink as BSNavLink,
   Card,
   CardTitle,
-  CardBody
+  CardBody,
+  CardImg
 } from 'reactstrap';
 import bn from 'utils/bemnames';
 
 const sidebarBackground = {
-  backgroundImage: `url("${sidebarBgImage}")`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
 };
@@ -111,10 +109,12 @@ class Sidebar extends React.Component {
         <div className={bem.e('content')}>
           <Card
               inverse
-              className={`border-0 bg-gradient-theme-top text-light`}
+              className={`border-0 bg-primary text-light`}
             >
-              <CardBody className="d-flex flex-column justify-content-center align-items-center">
-                <CardTitle><h5>MHM</h5></CardTitle>
+              <CardBody className="d-flex pt-2 flex-column justify-content-center align-items-center">
+              <CardImg
+                src={logoHomeImage}
+              />
               </CardBody>
             </Card>
           <Nav vertical>

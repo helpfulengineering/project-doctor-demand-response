@@ -1,4 +1,5 @@
 import React from "react";
+import FormUtil from "../utils/form-util";
 
 export class BaseService {
   static applicationContext = React.createContext({});
@@ -8,7 +9,13 @@ export class BaseService {
   }
 
   static getUserContext() {
-    return this.applicationContext._currentValue.userContext;
+    let user = localStorage.getItem('user');
+
+    if(!FormUtil.isEmpty(user)) {
+      console.log(user);
+      return JSON.parse(user);
+    }
+    return {};
   }
 
   static getBaseUrl() {

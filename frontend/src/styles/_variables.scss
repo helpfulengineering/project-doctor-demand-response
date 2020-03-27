@@ -11,15 +11,25 @@
 // $teal: #009688;
 // $cyan: #00bcd4;
 // $white: #fff;
-$theme-colors: (
+/*$theme-colors: (
   "primary": #6a82fb,
   "secondary": #fc5c7d,
   "success": #45b649,
   "danger": #f85032,
   "warning": #ffd700,
   "info": #00c9ff
-);
+);*/
 
+$theme-colors: (
+  "primary": #2364AA,
+  "secondary": #EA7317,
+  "success": #29BF12,
+  "danger": #FF3C38,
+  "warning": #FEC601,
+  "info": #08BDBD
+);
+// background - FBFEF9
+//FFF275 29BF12
 $enable-gradients: true;
 
 // card

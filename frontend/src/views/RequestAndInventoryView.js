@@ -41,10 +41,13 @@ class RequestAndInventoryView extends BaseComponent {
       supplyRequestModal: false,
       supplyRequestGridOptions: {
         columnDefs: [
-          { headerName: "Name", field: "org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Name", field: "user.org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Quantity", field: "quantity", sortable: true },
           { headerName: "Urgency", field: "urgency", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "City", field: "user.city", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "State", field: "user.state", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Zip Code", field: "user.zipcode", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Needed By", field: "needed_by", sortable: true},
           { headerName: "Request Date", field: "request_date", sortable: true},
           { headerName: "Status", field: "status", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} }

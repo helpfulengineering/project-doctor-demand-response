@@ -19,7 +19,22 @@ let inventoryController = {
         return data;
     },
     search: async function(req, res) {
-        let data = await dataAccess.search('inventory', req.body);
+
+        let criteria = req.body;
+        criteria.lookup = {
+            from: "users",
+            localField: "user_name",
+            foreignField: "user_name",
+            as: "user"
+        };
+        criteria.unwind = { path : "$user"};
+        
+        let data = await dataAccess.search('inventory', criteria );
+        data.forEach(rec => {
+            if(rec.user.length > 0) {
+                rec.user = rec.user[0];
+            }
+        });
         return data;
     },
     initializeForUpdate: function(inventory) {

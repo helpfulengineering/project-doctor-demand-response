@@ -1,0 +1,53 @@
+Development tasks:
+
+Phase I
+=======
+
+Link to terms and policy that shows a legal terms and agreement content
+
+Login form validation
+	- user id, password required
+	- frontend submits resetpassword, if failure, show error in login page
+	
+Signup sends activation email to email id and creates user record status as 'new' (possible statuses - 'new', 'active', 'suspended', 'deleted')
+	- Once user clicks the activation url, it hits frontend with a token that gets validated against server copy sent out to backend which marks user record as 'active'
+	- frontend after getting a 200 OK response, redirects to login page
+	- User logs in from there
+
+Forgot password, new form to provide user id, click continue, sends a email with reset password link
+	- user goes to that link which shows a form with user id, new password, retype password inputs
+	- user fills out and hit submit, password updates, user status is marked as 'active' and frontend redirects to login page.
+
+5 incorrect login attempts mark user record to 'suspended'
+	- if backend returns user is inactive, then show message that 'This user account is suspended due to numerous login attempts. Please reset your password using Forget Password to proceed.'
+	
+Update functionality for supply request and inventory
+	- Users should see a edit button in the sup. req table for their own requests.
+	- Click edit -> same supply request create form opens with selected req data populated. Hit save and it updates the DB
+	- User tye 'A', update button for all records
+	- Same update functionality as above for inventory
+
+Delete functionality for supp request and inventory
+	- Users should see a edit button in the sup. req table and inventory for the records they created.
+	- Click delete -> shows confirm delete modal and click delete, submits delete request, backend permanently deletes the record
+	- User tye 'A', delete button for all records
+	
+Profile modal. All user to update all fields except email, password
+
+Supply request and inventory table, if user is 'H' show org_name, else first_name, last_name in the table column name
+
+Clicking name will show the record in a detail modal
+
+My request / My inventory checkbox will list records created by user.
+
+Cleanup all unwanted code from template
+
+Legal and license verification for all libraries used
+
+
+Phase II
+========
+
+Sequence number for all collections
+
+Messaging / chat
