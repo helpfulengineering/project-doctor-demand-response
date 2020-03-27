@@ -51,6 +51,10 @@ class LoginForm extends BaseComponent {
     AuthenticationService.login(this.state.loginInfo).subscribe(resp => {
       if(resp && resp.status === true) {
         this.props.history.push("/");
+      } else if(resp.data && resp.data.userNotActivated) {
+        this.setState({...this.state, userNotActivated: true});
+      } else if(resp.data && resp.data.userSuspended) {
+        this.setState({...this.state, userSuspended: true});
       } else {
         this.setState({...this.state, loginFailed: true});
       }
@@ -84,6 +88,18 @@ class LoginForm extends BaseComponent {
                     this.state.loginFailed === true ? 
                     <Alert color="danger">
                       Login failed due to invalid credentials.
+                    </Alert> : '' 
+                  }
+                  {
+                    this.state.userNotActivated === true ? 
+                    <Alert color="warning">
+                      Your account is not activated yet! An activation email has been previously sent out to your email.
+                    </Alert> : '' 
+                  }
+                  {
+                    this.state.userSuspended === true ? 
+                    <Alert color="danger">
+                      Your account is suspended.
                     </Alert> : '' 
                   }
                   <FormGroup>

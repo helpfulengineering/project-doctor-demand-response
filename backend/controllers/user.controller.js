@@ -53,8 +53,30 @@ let userController = {
         let data = await dataAccess.view('users', req.query._id);
         return data;
     },
-    login: function(req, res) {
-        console.log('controller called');
+    login: async function(req, res) {
+        let user = await dataAccess.find('users', {'user_name': req.body.user_name});
+    
+        if(user && req.body.password == user.password) {
+
+            if(user.status == 'active') {
+                var payload = {
+                    id: user._id,
+                    user_name: user.user_name
+                };
+                var token = jwt.sign(payload, cfg.jwtSecret, { expiresIn: '1d' });
+                res.json({
+                    status: true,
+                    token: token,
+                    user: payload
+                });
+            } else if(user.status == 'new') {
+                return { status: false, data: {userNotActivated: true}};
+            } else if(user.status == 'suspended') {
+                return { status: false, data: {userSuspended: true}};
+            }
+        } else {
+            return { status: false, data: {unauthorized: true}};
+        }
     },
     search: async function(req, res) {
         let data = await dataAccess.search('users', req.body);

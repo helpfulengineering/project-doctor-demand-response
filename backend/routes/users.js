@@ -25,22 +25,12 @@ router.get('/viewProfile', auth.authenticate(), async function(req, res, next) {
 });
 
 router.post('/login',  async function(req, res) {
-
-    let user = await dataAccess.find('users', {'user_name': req.body.user_name});
+    let data = await userController.login(req, res);
     
-    if(user && req.body.password == user.password) {
-      var payload = {
-        id: user._id,
-        user_name: user.user_name
-      };
-      var token = jwt.sign(payload, cfg.jwtSecret, { expiresIn: '1d' });
-      res.json({
-          status: true,
-          token: token,
-          user: payload
-      });
-    } else {
+    if(data.unauthorized) {
       res.sendStatus(401);
+    } else {
+      res.send(data);
     }
   });
 
