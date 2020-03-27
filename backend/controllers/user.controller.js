@@ -1,13 +1,27 @@
-const dataAccess = require('../data-access/mongo.dataaccess');
+var express = require('express');
+var dataAccess = require('../data-access/mongo.dataaccess');
+var emailUtil = require('../util/email');
 const bcrypt = require('bcryptjs');
 // Regular users must only be able to modify / delete their own profile
 // Admin - full access
-const userController = {
-    registerUser: async function({ body: user }, res) {
+let userController = {
+    registerUser: async function(req, res) {
+        const user = req.body;
         validateUserRequest(user);
         await hashPassword(user);
 
+        user.status = 'new';
+        user.activation_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
         dataAccess.add('users', user);
+
+        let params = { 'to': req.body.email};
+        params.template = 'activation_email';
+        params.subject = 'MHM Account Activation';
+        params.activation_url = req.app.common_config.app_root_url + 'activate?user_name=' + user.user_name + '&code=' + user.activation_code;
+        params.support_email = req.app.common_config.support_email;
+        emailUtil.sendMail(req.app.mailer, params);
+
+        return true;
     },
     unRegisterUser: function(req, res) {
         // Access restriction

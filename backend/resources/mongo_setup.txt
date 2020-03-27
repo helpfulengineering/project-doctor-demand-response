@@ -1,3 +1,20 @@
 db.createCollection('users');
 db.createCollection('supply_request');
 db.createCollection('inventory');
+db.createCollection('sys_params');
+
+/* sys_params template setup */
+db.getCollection('sys_params').insertMany([{
+    "name" : "email_config",
+    "from" : "",
+    "host" : "smtp.gmail.com",
+    "port" : 465,
+    "auth_user" : "",
+    "auth_password" : "",
+    "activation_code_length" : 50
+},
+{
+    "name" : "common_config",
+    "support_email" : "",
+    "app_root_url": "http://localhost:3001/"
+}]);

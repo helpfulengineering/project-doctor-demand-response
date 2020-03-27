@@ -6,8 +6,8 @@ var auth = require("../security/auth");
 // Register Account
 router.put('/register', async function(req, res, next) {
   try{
-    await userController.registerUser(req, res);
-    res.send({status: true});
+    let status = await userController.registerUser(req, res);
+    res.send({ status });
   }catch(e){
     res.status(400).json({ message: e.message });
   }

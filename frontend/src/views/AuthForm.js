@@ -12,7 +12,7 @@ class AuthForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, retypedPassword:'', terms:'', userInfo: {
+    this.state = { ...this.state, retypedPassword:'', terms:'', messages: [], userInfo: {
             org_name: '',
             type: 'H',
             user_name: '',
@@ -40,6 +40,7 @@ class AuthForm extends BaseComponent {
     this.registerUser = this.registerUser.bind(this);
     this.updateUserType = this.updateUserType.bind(this);
     this.handleTermsChange = this.handleTermsChange.bind(this);
+    this.validate = this.validate.bind(this);
   }
 
   handleUserInfoChange(event) {
@@ -76,7 +77,13 @@ class AuthForm extends BaseComponent {
     this.state.userInfo.user_name = this.state.userInfo.email;
     let userInfo = this.state.userInfo;
     FormUtil.trimFields(userInfo);
-    this.validate(userInfo);
+    let messages = this.validate(userInfo);
+
+    if(messages.length !== 0) {
+      this.setState({...this.state, messages: messages});
+      return;
+    }
+
     UserService.registerUser(this.state.userInfo).subscribe(resp => {
       if(resp.status === true) {
         this.setState({...this.state, registrationSuccess: true});
@@ -131,16 +138,20 @@ class AuthForm extends BaseComponent {
         <Col md={9} sm={9} xs={9} className="mb-3 border-0">
           <Card className="flex-row border-0">
             <CardBody>
+                {
+                  this.state.messages.length > 0 ? 
+                  <Alert color='danger'> <ul>
+                    {
+                      this.state.messages.map(message => {
+                      return <li>{message}</li>
+                      })
+                    }
+                  </ul></Alert> : ''
+                }
                 <Form name="af" onSubmit={this.registerUser}>
                     {
                       this.state.registrationSuccess === true ?
                       <Alert color="success">
-                        You are successfully registered! Please proceed with <Button
-                          size="sm"
-                          color="primary"
-                          outline>
-                          Login
-                        </Button>
                         An activation email has been sent to you email.
                         Please follow the directions in email to activate your account!
                       </Alert> : '' 

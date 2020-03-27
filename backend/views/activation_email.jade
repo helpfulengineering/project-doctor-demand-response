@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title MHM Account Activation
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    block content
+        
+        hr
+        span Thanks for choosing MHM. Please 
+        a(href='#{activation_url}') activate your account.
+        
+        p If you experience problems accessing the link, copy and paste the URL below into your Web browser.
+        p URL: #{activation_url}
+        p If you continue to experience issues, please reach us at #{support_email}
+        hr
+        p MHM Team
