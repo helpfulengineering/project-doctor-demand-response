@@ -4,6 +4,7 @@ import { Button, Form, FormGroup, Input, Label, ButtonGroup, Row, Col, Alert,Car
   CardBody,
   CardImg } from 'reactstrap';
 import FormUtil from '../utils/form-util';
+import { withRouter } from "react-router-dom";
 import { BaseComponent } from '../components/BaseComponent';
 import { UserService } from '../services/UserService';
 
@@ -64,11 +65,18 @@ class AuthForm extends BaseComponent {
     }));
   }
 
+  redirectToLogin(event) {
+    event.preventDefault();
+
+    this.props.history.push("/login");
+  }
+
   registerUser = event => {
     event.preventDefault();
-    this.validate(this.state.userInfo);
     this.state.userInfo.user_name = this.state.userInfo.email;
-
+    let userInfo = this.state.userInfo;
+    FormUtil.trimFields(userInfo);
+    this.validate(userInfo);
     UserService.registerUser(this.state.userInfo).subscribe(resp => {
       if(resp.status === true) {
         this.setState({...this.state, registrationSuccess: true});
@@ -133,7 +141,9 @@ class AuthForm extends BaseComponent {
                           outline>
                           Login
                         </Button>
-                      </Alert> : ''
+                        An activation email has been sent to you email.
+                        Please follow the directions in email to activate your account!
+                      </Alert> : '' 
                     }
                     {
                       this.state.registrationSuccess === false ?
