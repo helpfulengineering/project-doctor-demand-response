@@ -90,12 +90,6 @@ class Header extends React.Component {
               style={{ minWidth: 250 }}
             >
               <PopoverBody className="p-0 border-light">
-                <UserCard
-                  title="Jane"
-                  subtitle="jane@jane.com"
-                  text="Last updated 3 mins ago"
-                  className="border-light"
-                >
                   <ListGroup flush>
                     <ListGroupItem tag="button" action className="border-light" onClick={this.toggleOpenProfileModal}>
                       <FontAwesomeIcon icon={faUser}/> &nbsp;Profile
@@ -110,7 +104,6 @@ class Header extends React.Component {
                       <FontAwesomeIcon icon={faSignOutAlt}/> &nbsp;Sign out
                     </ListGroupItem>
                   </ListGroup>
-                </UserCard>
               </PopoverBody>
             </Popover>
           </NavItem>

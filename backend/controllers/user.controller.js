@@ -7,9 +7,16 @@ var cfg = require("../security/jwtConfig");
 // Regular users must only be able to modify / delete their own profile
 // Admin - full access
 let userController = {
-    registerUser: function(req, res) {
+    registerUser: async function(req, res) {
         
         let user = req.body;
+        
+        let existingUser = await dataAccess.find('users', {'user_name': req.body.user_name});
+
+        if(existingUser) {
+            return {status: false, data: {existingUser: true}};
+        }
+
         user.status = 'new';
         user.activation_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
         dataAccess.add('users', req.body);
@@ -21,7 +28,7 @@ let userController = {
         params.support_email = req.app.common_config.support_email;
         emailUtil.sendMail(req.app.mailer, params);
 
-        return true;
+        return {status: true};
     },
     activateUser: async function(req, res) {
         

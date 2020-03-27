@@ -41,6 +41,7 @@ class AuthForm extends BaseComponent {
     this.updateUserType = this.updateUserType.bind(this);
     this.handleTermsChange = this.handleTermsChange.bind(this);
     this.validate = this.validate.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   handleUserInfoChange(event) {
@@ -88,6 +89,8 @@ class AuthForm extends BaseComponent {
       this.setState({...this.state, messages: []});
       if(resp.status === true) {
         this.setState({...this.state, registrationSuccess: true});
+      } else if(resp.data && resp.data.existingUser) {
+        this.setState({...this.state, messages: ['Account already exists for the provided email id.']});
       } else {
         this.setState({...this.state, registrationSuccess: false});
       }
@@ -289,7 +292,7 @@ class AuthForm extends BaseComponent {
                       </Col>
                       <Col xl={6} lg={6} md={6} className="d-flex justify-content-end align-items-center">
                         Already have account? &nbsp;&nbsp;
-                        <Button outline color="link" className="text-primary">Login</Button>
+                        <Button outline color="link" className="text-primary" onClick={this.redirectToLogin}>Login</Button>
                       </Col>
                     </Row>
                   </Form>
@@ -303,4 +306,4 @@ class AuthForm extends BaseComponent {
   }
 }
 
-export default AuthForm;
+export default withRouter(AuthForm);
