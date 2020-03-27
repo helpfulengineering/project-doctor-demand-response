@@ -60,30 +60,18 @@ const userController = {
 function validateUserRequest(userRequest){
     const requiredFields = [
         'org_name',
-        'type',
         'user_name',
         'password',
-        'first_name',
-        'last_name',
-        'description',
-        'address_line1',
-        'address_line2',
         'city',
         'state',
         'country',
         'zipcode',
-        'latitude',
-        'longitude',
         'phone',
-        'alternate_phone',
         'email',
-        'alternate_email'
     ];
 
-    const keys = new Set(Object.keys(userRequest));
-
     requiredFields.forEach(key => {
-        if(!keys.has(key)){
+        if(typeof(userRequest[key]) !== 'string' || userRequest[key].length === 0){
             throw Error(`User requires ${key} field`);
         }
     })
