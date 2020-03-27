@@ -6,6 +6,7 @@ services:
       context: backend
     ports:
       - 3000:3000
+      - 9229:9229
     volumes:
       - ./backend:/app:delegated
       - /app/node_modules/node-sass
