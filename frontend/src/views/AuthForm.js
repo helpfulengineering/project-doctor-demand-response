@@ -3,6 +3,7 @@ import logoImage from '../assets/img/logo/Original.png';
 import { Button, Form, FormGroup, Input, Label, ButtonGroup, Row, Col, Alert,Card,
   CardBody,
   CardImg } from 'reactstrap';
+import FormUtil from '../utils/form-util';
 import { BaseComponent } from '../components/BaseComponent';
 import { UserService } from '../services/UserService';
 
@@ -10,7 +11,7 @@ class AuthForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, retypedPassword:'', userInfo: {
+    this.state = { ...this.state, retypedPassword:'', terms:'', userInfo: {
             org_name: '',
             type: 'H',
             user_name: '',
@@ -37,6 +38,7 @@ class AuthForm extends BaseComponent {
     this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.updateUserType = this.updateUserType.bind(this);
+    this.handleTermsChange = this.handleTermsChange.bind(this);
   }
 
   handleUserInfoChange(event) {
@@ -56,11 +58,17 @@ class AuthForm extends BaseComponent {
     this.setState({...this.state, userInfo: userInfo});
   }
 
+  handleTermsChange(event){
+    this.setState(state => ({
+      terms: !state.terms
+    }));
+  }
+
   registerUser = event => {
     event.preventDefault();
-    this.validate();
+    this.validate(this.state.userInfo);
     this.state.userInfo.user_name = this.state.userInfo.email;
-    
+
     UserService.registerUser(this.state.userInfo).subscribe(resp => {
       if(resp.status === true) {
         this.setState({...this.state, registrationSuccess: true});
@@ -70,11 +78,38 @@ class AuthForm extends BaseComponent {
     });
   }
 
-  validate() {
-
+  validate(af) {
+    let messages = [];
+    if(FormUtil.isEmpty(af.org_name)) {
+      messages.push('Your Organization Name is required');
+    }
+    if(FormUtil.isEmpty(af.address_line1)) {
+      messages.push('Your Address is required');
+    }
+    if(FormUtil.isEmpty(af.city)) {
+      messages.push('Your City is required');
+    }
+    if(FormUtil.isEmpty(af.state)) {
+      messages.push('Your State is required');
+    }
+    if(FormUtil.isEmpty(af.zipcode)) {
+      messages.push('Your ZIP/Postal Code is required');
+    }
+    if(FormUtil.isEmpty(af.password) || af.password.length < 8) {
+      messages.push('A password of 8 characters in length is required');
+    }
+    if(FormUtil.isEmpty(this.state.retypedPassword) || this.state.retypedPassword !== af.password) {
+      messages.push('You must retype your password');
+    }
+    if(FormUtil.isEmpty(af.email)) {
+      messages.push('An email address is required');
+    }
+    return messages;
   }
+
+
   render() {
-    
+
     return (
 
 
@@ -88,9 +123,9 @@ class AuthForm extends BaseComponent {
         <Col md={9} sm={9} xs={9} className="mb-3 border-0">
           <Card className="flex-row border-0">
             <CardBody>
-                <Form onSubmit={this.registerUser}>
+                <Form name="af" onSubmit={this.registerUser}>
                     {
-                      this.state.registrationSuccess === true ? 
+                      this.state.registrationSuccess === true ?
                       <Alert color="success">
                         You are successfully registered! Please proceed with <Button
                           size="sm"
@@ -98,15 +133,15 @@ class AuthForm extends BaseComponent {
                           outline>
                           Login
                         </Button>
-                      </Alert> : '' 
+                      </Alert> : ''
                     }
                     {
-                      this.state.registrationSuccess === false ? 
+                      this.state.registrationSuccess === false ?
                       <Alert color="danger">
                         Registration failed.
-                      </Alert> : '' 
+                      </Alert> : ''
                     }
-                    
+
                     <FormGroup>
                       <ButtonGroup>
                         <Button
@@ -181,7 +216,7 @@ class AuthForm extends BaseComponent {
                       <Col xl={6} lg={6} md={6}>
                         <FormGroup>
                           <Label>Retype Password</Label>
-                          <Input type="password" name="retypedPassword"  value={this.state.retypedPassword} onChange={this.handleChange} />        
+                          <Input type="password" name="retypedPassword"  value={this.state.retypedPassword} onChange={this.handleChange} />
                         </FormGroup>
                       </Col>
                     </Row>
@@ -207,12 +242,12 @@ class AuthForm extends BaseComponent {
                         </Col>
                         <Col xl={6} lg={6} md={6}>
                           <Label>Alternate Phone</Label>
-                          <Input type="number" name="alternate_phone" value={this.state.userInfo.alternate_phone} onChange={this.handleUserInfoChange} />              
+                          <Input type="number" name="alternate_phone" value={this.state.userInfo.alternate_phone} onChange={this.handleUserInfoChange} />
                       </Col>
                     </Row>
                     <FormGroup check>
                       <Label check>
-                        <Input type="checkbox" />
+                        <Input type="checkbox" name="terms" value={this.state.terms} onChange={this.handleTermsChange}/>
                         Agree the terms and policy
                       </Label>
                     </FormGroup>
@@ -220,10 +255,12 @@ class AuthForm extends BaseComponent {
                     <Row className="d-flex align-items-center">
                       <Col xl={6} lg={6} md={6}>
                         <Button
+                          name="btnReg"
                           size="md"
                           block
                           color="primary"
                           className="border-0"
+                          disabled={!this.state.terms}
                           onClick={this.registerUser}>
                           Signup
                         </Button>
@@ -239,7 +276,7 @@ class AuthForm extends BaseComponent {
         </Col>
       </Row>
 
-      
+
     );
   }
 }
