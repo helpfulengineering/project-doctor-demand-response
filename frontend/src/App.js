@@ -8,6 +8,7 @@ import axios from "axios";
 import './styles/reduction.scss';
 import SignupView from './views/SignupView';
 import LoginView from './views/LoginView';
+import ActivationView from './views/ActivationView';
 import PrivateRoute from './components/PrivateRoute';
 
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
@@ -58,6 +59,15 @@ class App extends React.Component {
               layout={EmptyLayout}
               component={props => (
                 <SignupView {...props} />
+              )}
+            />
+
+            <LayoutRoute
+              exact
+              path="/activate"
+              layout={EmptyLayout}
+              component={props => (
+                <ActivationView {...props} />
               )}
             />
 

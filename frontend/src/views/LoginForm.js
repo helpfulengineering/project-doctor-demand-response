@@ -4,12 +4,13 @@ import { withRouter } from "react-router-dom";
 import { BaseComponent } from '../components/BaseComponent';
 import { AuthenticationService } from '../services/AuthenticationService';
 import logoImage from '../assets/img/logo/Original.png';
+import queryString from 'query-string';
 
-class AuthForm extends BaseComponent {
+class LoginForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, loginFailed: false, loginInfo: {
+    this.state = { ...this.state, loginFailed: false, newActivation: false, loginInfo: {
             user_name: '',
             password: ''
         }
@@ -19,6 +20,12 @@ class AuthForm extends BaseComponent {
     this.handleLoginInfoChange = this.handleLoginInfoChange.bind(this);
     this.login = this.login.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    const params = queryString.parse(this.props.location.search);
+    this.setState({...this.state, newActivation: params.newActivation});
   }
 
   handleLoginInfoChange(event) {
@@ -67,7 +74,12 @@ class AuthForm extends BaseComponent {
           <Card className="flex-row border-0">
             <CardBody>
                 <Form onSubmit={this.login}>
-                  
+                  {
+                    this.state.newActivation === 'true' ? 
+                    <Alert color="success">
+                      Your account is activated! Please login.
+                    </Alert> : '' 
+                  }
                   {
                     this.state.loginFailed === true ? 
                     <Alert color="danger">
@@ -117,4 +129,4 @@ class AuthForm extends BaseComponent {
   }
 }
 
-export default withRouter(AuthForm);
+export default withRouter(LoginForm);

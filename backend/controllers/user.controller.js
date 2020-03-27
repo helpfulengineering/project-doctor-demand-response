@@ -21,6 +21,20 @@ let userController = {
 
         return true;
     },
+    activateUser: async function(req, res) {
+        
+        let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
+        
+        if(user.user_name === req.body.user_name && user.activation_code === req.body.code && user.status === 'new') {
+            user.status = 'active';
+            user.activation_code = '';
+            user = userController.initializeForUpdate(user);
+            dataAccess.update('users', user);
+            return true;
+        }
+
+        return false;
+    },
     unRegisterUser: function(req, res) {
         // Access restriction
         dataAccess.delete('users', req.body._id);
@@ -45,10 +59,6 @@ let userController = {
     search: async function(req, res) {
         let data = await dataAccess.search('users', req.body);
         return data;
-    },
-    activateUser: function(req, res) {
-        // Access restriction
-        dataAccess.update('users', { "_id" : req.body._id, "active": true});
     },
     deactivateUser: function(req, res) {   
         // Access restriction

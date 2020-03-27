@@ -55,8 +55,7 @@ let mongoDataAccess = {
         let doc = {};
         try {
             doc = dbMgr.dbConnection.collection(collection).findOne(
-                query,
-                {}
+                query
             );
             await doc.then(doc => {
                 

@@ -85,6 +85,7 @@ class AuthForm extends BaseComponent {
     }
 
     UserService.registerUser(this.state.userInfo).subscribe(resp => {
+      this.setState({...this.state, messages: []});
       if(resp.status === true) {
         this.setState({...this.state, registrationSuccess: true});
       } else {

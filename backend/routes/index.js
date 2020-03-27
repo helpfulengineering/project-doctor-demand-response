@@ -15,4 +15,10 @@ router.post('/unregister', auth.authenticate(), function(req, res, next) {
   res.send({status: true});
 });
 
+// Activate user
+router.post('/activate', async function(req, res, next) {
+  let status = await userController.activateUser(req, res);
+  res.send({status: status});
+});
+
 module.exports = router;
