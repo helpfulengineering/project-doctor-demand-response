@@ -9,7 +9,7 @@ export class AuthenticationService extends BaseService {
     let responseSubject = new Subject();
     RestService.post("users/login", loginInfo).subscribe(resp => {
       localStorage.setItem('access_token', 'Bearer ' + resp.token);
-      localStorage.setItem('user', resp.user.toString());
+      localStorage.setItem('user', JSON.stringify(resp.user));
       AuthenticationService.getAppContext().token = localStorage.getItem('access_token');
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_token');
       responseSubject.next(resp);

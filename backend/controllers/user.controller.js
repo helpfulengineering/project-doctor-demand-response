@@ -1,16 +1,18 @@
 var express = require('express');
 var dataAccess = require('../data-access/mongo.dataaccess');
 var emailUtil = require('../util/email');
-
+const bcrypt = require('bcryptjs');
 // Regular users must only be able to modify / delete their own profile
 // Admin - full access
 let userController = {
-    registerUser: function(req, res) {
-        
-        let user = req.body;
+    registerUser: async function(req, res) {
+        const user = req.body;
+        validateUserRequest(user);
+        await hashPassword(user);
+
         user.status = 'new';
         user.activation_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
-        dataAccess.add('users', req.body);
+        dataAccess.add('users', user);
 
         let params = { 'to': req.body.email};
         params.template = 'activation_email';
@@ -39,8 +41,13 @@ let userController = {
         let data = await dataAccess.view('users', req.query._id);
         return data;
     },
-    login: function(req, res) {
-        console.log('controller called');
+    login: async function(req, _) {
+        const { user_name, password } = req.body;
+        validateUsername(user_name);
+        let user = await dataAccess.find('users', { user_name });
+
+        await verifyPassword(user, password);
+        return user;
     },
     search: async function(req, res) {
         let data = await dataAccess.search('users', req.body);
@@ -63,6 +70,46 @@ let userController = {
         return user;
     }
 };
+
+function validateUserRequest(userRequest){
+    const requiredFields = [
+        'org_name',
+        'user_name',
+        'password',
+        'city',
+        'state',
+        'country',
+        'zipcode',
+        'phone',
+        'email',
+    ];
+
+    requiredFields.forEach(key => {
+        if(typeof(userRequest[key]) !== 'string' || userRequest[key].length === 0){
+            throw Error(`User requires ${key} field`);
+        }
+    })
+}
+
+async function hashPassword(user){
+    const password = user.password;
+    delete user.password;
+    delete user.passwordDupe;
+
+    user.passwordHash = await bcrypt.hash(password, 10);
+}
+
+function validateUsername(user_name){
+    if(typeof(user_name) !== 'string' || user_name.length === 0) {
+        throw Error('Invalid credentials');
+    }
+}
+
+async function verifyPassword(user, password){
+    if(!user || !(await bcrypt.compare(password, user.passwordHash))) {
+        throw Error('Invalid credentials');
+    }
+}
 
 
 module.exports = userController;
