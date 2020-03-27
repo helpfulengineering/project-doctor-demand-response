@@ -15,7 +15,7 @@ let userController = {
         let params = { 'to': req.body.email};
         params.template = 'activation_email';
         params.subject = 'MHM Account Activation';
-        params.activation_url = req.app.common_config.app_root_url + 'activate?code=' + user.activation_code;
+        params.activation_url = req.app.common_config.app_root_url + 'activate?user_name=' + user.user_name + '&code=' + user.activation_code;
         params.support_email = req.app.common_config.support_email;
         emailUtil.sendMail(req.app.mailer, params);
 
