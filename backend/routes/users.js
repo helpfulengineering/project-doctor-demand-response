@@ -1,11 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userController = require('../controllers/user.controller.js');
-const jwt = require('jsonwebtoken');
-var app = require('../app');
-var cfg = require("../security/jwtConfig");
 var auth = require("../security/auth");
-var dataAccess = require('../data-access/mongo.dataaccess');
 
 // Update password
 router.post('/updatePassword', auth.authenticate(), function(req, res, next) {
@@ -26,12 +22,7 @@ router.get('/viewProfile', auth.authenticate(), async function(req, res, next) {
 
 router.post('/login',  async function(req, res) {
     let data = await userController.login(req, res);
-    
-    if(data.unauthorized) {
-      res.sendStatus(401);
-    } else {
-      res.send(data);
-    }
+    res.send(data);
   });
 
 router.post('/search', auth.authenticate(), async function(req, res, next) {

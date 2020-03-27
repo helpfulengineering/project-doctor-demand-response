@@ -51,12 +51,11 @@ class LoginForm extends BaseComponent {
     AuthenticationService.login(this.state.loginInfo).subscribe(resp => {
       if(resp && resp.status === true) {
         this.props.history.push("/");
-      } else if(resp.data && resp.data.userNotActivated) {
-        this.setState({...this.state, userNotActivated: true});
-      } else if(resp.data && resp.data.userSuspended) {
-        this.setState({...this.state, userSuspended: true});
       } else {
-        this.setState({...this.state, loginFailed: true});
+        this.setState({...this.state, userNotActivated: resp.data.userNotActivated, 
+          loginFailed: resp.data.loginFailed, 
+          userSuspended: resp.data.userSuspended
+        });
       }
     });
   }
