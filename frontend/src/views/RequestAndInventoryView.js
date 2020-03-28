@@ -1,9 +1,12 @@
 import React from 'react';
+import userContext from 'react';
 import Page from 'components/Page';
 import { withRouter } from 'react-router-dom';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import { SupplyRequestService } from '../services/SupplyRequestService';
 import { InventoryService } from '../services/InventoryService';
+import NameCellRenderer from '../renderers/NameCellRenderer';
+import { Subject } from 'rxjs';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -31,7 +34,8 @@ import Typography from '../components/Typography';
 import SupplyRequestForm from './SupplyRequestForm';
 import InventoryForm from './InventoryForm';
 import GridUtil from '../utils/grid-util';
-
+import SupplyRequestDetailsModal from './SupplyRequestDetailsModal';
+import { RequestInventoryContext } from '../contexts/RequestInventoryContext';
 
 class RequestAndInventoryView extends BaseComponent {
 
@@ -41,7 +45,8 @@ class RequestAndInventoryView extends BaseComponent {
       supplyRequestModal: false,
       supplyRequestGridOptions: {
         columnDefs: [
-          { headerName: "Name", field: "user.org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          
+          { headerName: "Name", field: "user.org_name", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true}, cellRendererFramework: NameCellRenderer},
           { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
           { headerName: "Quantity", field: "quantity", sortable: true },
           { headerName: "Urgency", field: "urgency", filter: true, sortable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
@@ -81,7 +86,10 @@ class RequestAndInventoryView extends BaseComponent {
       supplyRequestData: [],
       inventoryData: [],
       supplyRequestDetail: {},
-      inventoryDetail: {}
+      inventoryDetail: {},
+      toggleSRDetailModal: this.toggleSRDetailModal,
+      selectedSupplyRequest: {},
+      srModalEvent: new Subject()
     };
     this.supplyRequestModal = this.supplyRequestModal.bind(this);
     this.inventoryModal = this.inventoryModal.bind(this);
@@ -133,18 +141,16 @@ class RequestAndInventoryView extends BaseComponent {
       });
     }
   };
-  toggleSRDetailModal = modalType => () => {
-    if (!modalType) {
-      return this.setState({ ...this.state,
-        supplyRequestDetailModal: !this.state.supplyRequestDetailModal,
-      });
-    }
+  toggleSRDetailModal = () => {
+    console.log(this.state.selectedSupplyRequest);
+    
+    this.state.srModalEvent.next(this.state.selectedSupplyRequest);
   };
 
   toggleInventoryModal= modalType => () => {
     if (!modalType) {
       return this.setState({ ...this.state,
-        inventoryModal: !this.state.inventoryModal,
+        inventoryModal: !this.state.inventoryModal
       });
     }
   };
@@ -190,6 +196,7 @@ class RequestAndInventoryView extends BaseComponent {
         title=""
         breadcrumbs={[{ name: 'Requests and Inventory', active: true }]}
       >
+        <RequestInventoryContext.Provider value = {this.state}>
         <Row>
           <Col lg={12} md={12} sm={12} xs={12}>
           <Card>
@@ -272,14 +279,9 @@ class RequestAndInventoryView extends BaseComponent {
           </ModalBody>
         </Modal>
         
-        <Modal
-          isOpen={this.state.supplyRequestDetailModal}
-          toggle={this.toggleSRDetailModal()}>
-          <ModalHeader toggle={this.toggleSRDetailModal()}>Supply Request Details</ModalHeader>
-          <ModalBody>
-           
-          </ModalBody>
-        </Modal>
+        <SupplyRequestDetailsModal openModalEvent={this.state.srModalEvent} supplyRequest={this.state.selectedSupplyRequest}>
+
+        </SupplyRequestDetailsModal>
 
         <Modal
           isOpen={this.state.inventoryDetailModal}
@@ -289,6 +291,7 @@ class RequestAndInventoryView extends BaseComponent {
            
           </ModalBody>
         </Modal>
+        </RequestInventoryContext.Provider>
       </Page>
     );
   }

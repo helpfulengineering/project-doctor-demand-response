@@ -32,6 +32,7 @@
     "react-simple-maps": "^0.12.1",
     "react-sizeme": "^2.5.2",
     "reactstrap": "^7.1.0",
+    "rxjs": "^6.5.4",
     "serialize-javascript": "^3.0.0",
     "victory": "^32.0.0"
   },
