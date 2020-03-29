@@ -3,78 +3,16 @@ import { faStethoscope, faChartPie, faIndustry, faUserShield, faExchangeAlt } fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import logoHomeImage from '../../assets/img/logo/Original on Transparent.png';
 
-import {
-  MdAccountCircle,
-  MdArrowDropDownCircle,
-  MdBorderAll,
-  MdBrush,
-  MdChromeReaderMode,
-  MdDashboard,
-  MdGroupWork,
-  MdNotificationsActive,
-  MdRadioButtonChecked,
-  MdStar,
-  MdTextFields,
-  MdViewCarousel,
-  MdViewDay,
-  MdViewList,
-} from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import {
-  // UncontrolledTooltip,
-  Collapse,
   Nav,
-  Navbar,
   NavItem,
   NavLink as BSNavLink,
   Card,
-  CardTitle,
   CardBody,
   CardImg
 } from 'reactstrap';
 import bn from 'utils/bemnames';
-
-const sidebarBackground = {
-  backgroundSize: 'cover',
-  backgroundRepeat: 'no-repeat',
-};
-
-const navComponents = [
-  { to: '/buttons', name: 'buttons', exact: false, Icon: MdRadioButtonChecked },
-  {
-    to: '/button-groups',
-    name: 'button groups',
-    exact: false,
-    Icon: MdGroupWork,
-  },
-  { to: '/forms', name: 'forms', exact: false, Icon: MdChromeReaderMode },
-  { to: '/input-groups', name: 'input groups', exact: false, Icon: MdViewList },
-  {
-    to: '/dropdowns',
-    name: 'dropdowns',
-    exact: false,
-    Icon: MdArrowDropDownCircle,
-  },
-  { to: '/badges', name: 'badges', exact: false, Icon: MdStar },
-  { to: '/alerts', name: 'alerts', exact: false, Icon: MdNotificationsActive },
-  { to: '/progress', name: 'progress', exact: false, Icon: MdBrush },
-  { to: '/modals', name: 'modals', exact: false, Icon: MdViewDay },
-];
-
-const navContents = [
-  { to: '/typography', name: 'typography', exact: false, Icon: MdTextFields },
-  { to: '/tables', name: 'tables', exact: false, Icon: MdBorderAll },
-];
-
-const pageContents = [
-  { to: '/login', name: 'login / signup', exact: false, Icon: MdAccountCircle },
-  {
-    to: '/login-modal',
-    name: 'login modal',
-    exact: false,
-    Icon: MdViewCarousel,
-  },
-];
 
 const navItems = [
   { to: '/', name: 'dashboard', exact: true, Icon: faChartPie },

@@ -68,7 +68,7 @@ class InventoryDetailsModal extends BaseComponent {
         toggle={this.toggle()}
         className={this.props.className}>
         <ModalHeader toggle={this.toggle()}>
-          <FontAwesomeIcon size='md' icon={faStethoscope}/>
+          <FontAwesomeIcon icon={faStethoscope}/>
           <span className="pl-2">{
             this.state.inventory.user.org_name ? 
             this.state.inventory.user.org_name : 
@@ -110,14 +110,14 @@ class InventoryDetailsModal extends BaseComponent {
         </ModalBody>
         <ModalFooter className="d-flex justify-content-between">
           <Button color="danger" onClick={this.deleteInventory}>
-            <FontAwesomeIcon size="md" icon={faTrashAlt}/><span className="pl-2">Delete</span>
+            <FontAwesomeIcon icon={faTrashAlt}/><span className="pl-2">Delete</span>
           </Button>
           <span>
             <Button color="primary" onClick={this.deleteInventory} className="mr-2">
-              <FontAwesomeIcon size="md" icon={faPenAlt}/><span className="pl-2">Edit</span>
+              <FontAwesomeIcon icon={faPenAlt}/><span className="pl-2">Edit</span>
             </Button>
             <Button color="light" onClick={this.toggle()}>
-              <FontAwesomeIcon size="md" icon={faTimes} /><span className="pl-2">Cancel</span>
+              <FontAwesomeIcon icon={faTimes} /><span className="pl-2">Cancel</span>
             </Button>
           </span>
         </ModalFooter>

@@ -222,7 +222,7 @@ class RequestAndInventoryView extends BaseComponent {
                         <FontAwesomeIcon size='lg' icon={faCartPlus} className='text-secondary text-bold' />
                         <strong className="pl-3">Supply requests</strong>
                     </span>
-                    <span inline>
+                    <span>
                         <FormGroup inline check>
                             <Input type="checkbox" /> My Supply Requests
                         </FormGroup>
@@ -254,7 +254,7 @@ class RequestAndInventoryView extends BaseComponent {
                         <FontAwesomeIcon size='lg' icon={faShippingFast} className='text-info text-bold' />
                         <strong className="pl-3">Inventory</strong>
                     </span>
-                    <span inline>
+                    <span>
                         <FormGroup inline check>
                             <Input type="checkbox" /> My Inventories
                         </FormGroup>

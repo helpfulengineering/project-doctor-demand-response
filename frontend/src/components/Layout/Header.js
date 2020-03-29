@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCog, faSignOutAlt, faUser, faQuestionCircle, faEnvelopeSquare, faComments } from '@fortawesome/free-solid-svg-icons';
-import { UserCard } from 'components/Card';
+import { faUserCog, faSignOutAlt, faUser, faQuestionCircle, faComments } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { AuthenticationService } from '../../services/AuthenticationService';
 import { withRouter } from "react-router-dom";
@@ -114,7 +113,7 @@ class Header extends React.Component {
           isOpen={this.state.isOpenHelpModal}
           toggle={this.toggleOpenHelpModal}>
           <ModalHeader toggle={this.toggleOpenHelpModal}>
-          <FontAwesomeIcon size='md' icon={faQuestionCircle}/> &nbsp;Help
+          <FontAwesomeIcon icon={faQuestionCircle}/> &nbsp;Help
           </ModalHeader>
           <ModalBody>
               <p>MHM is an application developed to enable our Healthcare Providers / medical professionals 
@@ -133,7 +132,7 @@ class Header extends React.Component {
           isOpen={this.state.isOpenMessagesModal}
           toggle={this.toggleOpenMessagesModal}>
           <ModalHeader toggle={this.toggleOpenMessagesModal}>
-          <FontAwesomeIcon size='md' icon={faComments}/> &nbsp;Messages
+          <FontAwesomeIcon icon={faComments}/> &nbsp;Messages
           </ModalHeader>
           <ModalBody>
               <p>Coming soon!
@@ -145,7 +144,7 @@ class Header extends React.Component {
           isOpen={this.state.isOpenProfileModal}
           toggle={this.toggleOpenProfileModal}>
           <ModalHeader toggle={this.toggleOpenProfileModal}>
-          <FontAwesomeIcon size='md' icon={faUser}/> &nbsp;Profile
+          <FontAwesomeIcon icon={faUser}/> &nbsp;Profile
           </ModalHeader>
           <ModalBody>
               <p>Coming soon!

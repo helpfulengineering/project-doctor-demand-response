@@ -22,7 +22,6 @@ class BubbleMap extends Component {
   };
 
   render() {
-    const primaryColor = getColor('primary');
     const secondaryColor = getColor('secondary');
     const lightColor = getColor('gray');
 

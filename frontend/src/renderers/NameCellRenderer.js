@@ -8,7 +8,7 @@ export default class NameCellRenderer extends React.Component {
     render() {
         
         let data = this.props.data;
-        console.log(this.props);
+        
         let value = '';
         let gridName = this.props.agGridReact.gridOptions.gridName;
 

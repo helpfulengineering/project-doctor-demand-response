@@ -8,7 +8,7 @@ import logoImage from '../assets/img/logo/Original trimmed.png';
 import {
     Card,
     Col,
-    Row, Alert, CardImg, CardBody, CardText
+    Row, Alert, CardImg, CardBody
   } from 'reactstrap';
 
 

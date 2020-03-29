@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { BaseComponent } from '../components/BaseComponent';
 import { SupplyRequestService } from '../services/SupplyRequestService';
-import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 import FormUtil from '../utils/form-util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

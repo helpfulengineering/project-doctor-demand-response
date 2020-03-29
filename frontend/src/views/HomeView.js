@@ -15,7 +15,6 @@ import {
   Col,
   Row,
 } from 'reactstrap';
-import { getColor } from 'utils/colors';
 import { BaseComponent } from '../components/BaseComponent';
 import { faStethoscope, faIndustry, faCartPlus, faShippingFast } from '@fortawesome/free-solid-svg-icons';
 
