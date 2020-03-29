@@ -1,5 +1,6 @@
 var express = require('express');
 var dataAccess = require('../data-access/mongo.dataaccess');
+var SearchUtil = require('../util/search-utility');
 
 // Regular users must only be able to modify / delete their inventories
 // Admin - full access
@@ -35,13 +36,22 @@ let inventoryController = {
                 rec.user = rec.user[0];
             }
         });
-        return data;
+        return this.filterSecureInfo(data);
     },
     initializeForUpdate: function(inventory) {
         
         delete inventory.created_by;
         delete inventory.created_date;
         return inventory;
+    },
+    
+    filterSecureInfo: function(inventory) {
+        
+        return inventory.map(req => {
+            let data = { ...req, user: SearchUtil.filterUserInfo(req.user)};
+            delete data.user_name;
+            return data;
+        });
     }
 };
 

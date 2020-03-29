@@ -1,6 +1,7 @@
 var express = require('express');
 var dataAccess = require('../data-access/mongo.dataaccess');
 var ObjectId = require('mongodb').ObjectID;
+var SearchUtil = require('../util/search-utility');
 
 // Regular users must only be able to modify / delete their supply requests
 // Admin - full access
@@ -37,8 +38,18 @@ let supplyRequestController = {
                 rec.user = rec.user[0];
             }
         });
-        return data;
+
+        return this.filterSecureInfo(data);
     },
+    filterSecureInfo: function(supply_requests) {
+        
+        return supply_requests.map(req => {
+            let data = { ...req, user: SearchUtil.filterUserInfo(req.user)};
+            delete data.user_name;
+            return data;
+        });
+    },
+
     initializeForUpdate: function(supply_request) {
         
         delete supply_request.created_by;

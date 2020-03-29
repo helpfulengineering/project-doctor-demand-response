@@ -3,9 +3,9 @@ var router = express.Router();
 const dashboardController = require('../controllers/dashboard.controller.js');
 
 // Get Dashboard data
-router.get('/dashboard', function(req, res, next) {
-  dashboardController.getDashboardData(req, res);
-  res.send({status: true});
+router.get('/dashboard', async function(req, res, next) {
+  let data = await dashboardController.getDashboardData(req, res);
+  res.send(data);
 });
 
 module.exports = router;

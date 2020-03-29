@@ -63,7 +63,7 @@ class SupplyRequestDetailsModal extends BaseComponent {
   render() {
     
     return (
-      <Modal size="lg"
+      <Modal size="xl"
         isOpen={this.state.openModal}
         toggle={this.toggle()}
         className={this.props.className}>
@@ -76,38 +76,54 @@ class SupplyRequestDetailsModal extends BaseComponent {
         </ModalHeader>
         <ModalBody>
           <Row>
-            <Col xl={6} lg={6} md={6}>
+            <Col xl={7} lg={7} md={7}>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>Supply Type</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.supply_type}</Col>
+                <Col xl={5} lg={5} md={5}><strong>Supply Type</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.supply_type}</Col>
               </Row>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>Quantity</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.quantity}</Col>
+                <Col xl={5} lg={5} md={5}><strong>Quantity</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.quantity}</Col>
               </Row>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>Urgency</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.urgency}</Col>
+                <Col xl={5} lg={5} md={5}><strong>Urgency</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.urgency}</Col>
               </Row>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>Needed By</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.needed_by}</Col>
+                <Col xl={5} lg={5} md={5}><strong>Needed By</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.needed_by}</Col>
               </Row>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>City</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.user.city}</Col>
+                <Col xl={5} lg={5} md={5}><strong>City</strong></Col>
+                <Col xl={7} lg={6} md={6}>{this.state.supplyRequest.user.city}</Col>
               </Row>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>State</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.user.state}</Col>
+                <Col xl={5} lg={5} md={5}><strong>State</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.user.state}</Col>
               </Row>
               <Row className="pb-4">
-                <Col xl={6} lg={6} md={6}><strong>Zip Code</strong></Col>
-                <Col xl={6} lg={6} md={6}>{this.state.supplyRequest.user.zipcode}</Col>
+                <Col xl={5} lg={5} md={5}><strong>Zip Code</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.user.zipcode}</Col>
+              </Row>
+              <Row className="pb-4">
+                <Col xl={5} lg={5} md={5}><strong>Phone</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.user.phone}</Col>
+              </Row>
+              <Row className="pb-4">
+                <Col xl={5} lg={5} md={5}><strong>Alternate Phone</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.user.alternate_phone}</Col>
+              </Row>
+              <Row className="pb-4">
+                <Col xl={5} lg={5} md={5}><strong>Email</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.user.email}</Col>
+              </Row>
+              <Row className="pb-4">
+                <Col xl={5} lg={5} md={5}><strong>Alternate Email</strong></Col>
+                <Col xl={7} lg={7} md={7}>{this.state.supplyRequest.user.alternate_email}</Col>
               </Row>
             </Col>
 
-            <Col xl={6} lg={6} md={6} className="bg-light p-2">
+            <Col xl={5} lg={5} md={5} className="bg-light p-2">
               {this.state.supplyRequest.comments}
             </Col>
           </Row>
