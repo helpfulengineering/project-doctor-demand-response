@@ -84,6 +84,13 @@ let userController = {
                         user: payload
                     });
                 }
+            } else {
+                let update = {'_id': user._id, 'failed_login_attempt': user.failed_login_attempt + 1};
+                console.log(user.failed_login_attempt);
+                if(user.failed_login_attempt > 3) {
+                    update.status = 'suspended';
+                }
+                dataAccess.update('users', update);
             }
         }
         return { status: false, data: {loginFailed: true}};
