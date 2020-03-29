@@ -17,11 +17,29 @@ import {
 } from 'reactstrap';
 import { BaseComponent } from '../components/BaseComponent';
 import { faStethoscope, faIndustry, faCartPlus, faShippingFast } from '@fortawesome/free-solid-svg-icons';
+import { DashboardService } from '../services/DashboardService';
 
 class HomeView extends BaseComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = { ...this.state, dashboardData: {} 
+    };
+  }
   componentDidMount() {
-    // this is needed, because InfiniteCalendar forces window scroll
+    
     window.scrollTo(0, 0);
+    DashboardService.getDashboardData().subscribe(resp => {
+      if(resp.status === true) {
+        this.setState({
+          ...this.state,
+          dashboardData: resp.data
+        });
+      }
+      else {
+        // show alert message
+      }
+    });
   }
 
   render() {
@@ -37,7 +55,7 @@ class HomeView extends BaseComponent {
                 color= 'primary'
                 icon={faStethoscope}
                 title='Healthcare Providers'
-                subtitle='245'
+                subtitle={this.state.dashboardData.hcp_count}
             />
           </Col>
 
@@ -46,7 +64,7 @@ class HomeView extends BaseComponent {
                 color= 'success'
                 icon={faIndustry}
                 title='Volunteers'
-                subtitle='1346'
+                subtitle={this.state.dashboardData.volunteer_count}
             />
           </Col>
 
@@ -55,7 +73,7 @@ class HomeView extends BaseComponent {
                 color= 'danger'
                 icon={faCartPlus}
                 title='Supply requests'
-                subtitle='960'
+                subtitle={this.state.dashboardData.supply_request_count}
             />
           </Col>
 
@@ -64,7 +82,7 @@ class HomeView extends BaseComponent {
                 color= 'info'
                 icon={faShippingFast}
                 title='Inventory'
-                subtitle='122'
+                subtitle={this.state.dashboardData.inventory_count}
             />
           </Col>
         </Row>

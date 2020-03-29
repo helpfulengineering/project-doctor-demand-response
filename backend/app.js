@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var supplyRequestRouter = require('./routes/supply-requests');
 var inventoryRouter = require('./routes/inventory');
+var dashboardRouter = require('./routes/dashboard');
 var auth = require("./security/auth");
 var dbMgr = require('./data-access/db-manager');
 var cors = require('cors');
@@ -35,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/supplyRequests', supplyRequestRouter);
 app.use('/inventory', inventoryRouter);
+app.use('/dashboard', dashboardRouter);
 
 app.constants = {
   db: {

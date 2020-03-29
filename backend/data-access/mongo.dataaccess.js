@@ -69,6 +69,24 @@ let mongoDataAccess = {
 
         return doc;
     },
+    count: async function(collection, query) {
+        let count = 0;
+        try {
+            count = dbMgr.dbConnection.collection(collection).countDocuments(
+                query
+            );
+            await count.then(doc => {
+                
+            }).catch(err => {
+                count =0;
+                console.log(err);
+            });
+        } catch(err) {
+            console.log(err);
+        };
+
+        return count;
+    },
     search: async function(collection, criteria) {
         let results = [];
         try {
