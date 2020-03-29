@@ -1,12 +1,20 @@
 import React from 'react';
-import userContext from 'react';
 import Page from 'components/Page';
 import { withRouter } from 'react-router-dom';
-import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+import { AgGridReact } from 'ag-grid-react';
 import { SupplyRequestService } from '../services/SupplyRequestService';
 import { InventoryService } from '../services/InventoryService';
 import NameCellRenderer from '../renderers/NameCellRenderer';
 import { Subject } from 'rxjs';
+import { BaseComponent } from '../components/BaseComponent';
+import { faCartPlus, faShippingFast, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SupplyRequestForm from './SupplyRequestForm';
+import InventoryForm from './InventoryForm';
+import GridUtil from '../utils/grid-util';
+import SupplyRequestDetailsModal from './SupplyRequestDetailsModal';
+import InventoryDetailsModal from './InventoryDetailsModal';
+import { RequestInventoryContext } from '../contexts/RequestInventoryContext';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -26,16 +34,7 @@ import {
   ModalHeader,
   ModalFooter
 } from 'reactstrap';
-import { getColor } from 'utils/colors';
-import { BaseComponent } from '../components/BaseComponent';
-import { faStethoscope, faIndustry, faCartPlus, faShippingFast, faPlusSquare, faPlusCircle, faList, faSave, faCross, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Typography from '../components/Typography';
-import SupplyRequestForm from './SupplyRequestForm';
-import InventoryForm from './InventoryForm';
-import GridUtil from '../utils/grid-util';
-import SupplyRequestDetailsModal from './SupplyRequestDetailsModal';
-import { RequestInventoryContext } from '../contexts/RequestInventoryContext';
+
 
 class RequestAndInventoryView extends BaseComponent {
 
@@ -63,11 +62,12 @@ class RequestAndInventoryView extends BaseComponent {
         rowModelType: 'infinite',
         paginationPageSize: 10,
         cacheBlockSize: 10,
-        maxBlocksInCache: 1
+        maxBlocksInCache: 1,
+        gridName: 'supplyRequestGrid'
       },
       inventoryGridOptions: {
         columnDefs: [
-          { headerName: "Name", field: "org_name", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
+          { headerName: "Name", field: "user.org_name", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true}, cellRendererFramework: NameCellRenderer },
           { headerName: "Supply Type", field: "supply_type", filter: true, sortable: true, resizable: true, filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true}  },
           { headerName: "Quantity", field: "quantity", filter: true, sortable: true, resizable: true },
           { headerName: "Status", field: "status", filter: true, sortable: true, resizable: true,filterParams: {filterOptions: ['contains'], suppressAndOrCondition: true} },
@@ -81,15 +81,21 @@ class RequestAndInventoryView extends BaseComponent {
         rowModelType: 'infinite',
         paginationPageSize: 10,
         cacheBlockSize: 10,
-        maxBlocksInCache: 1
+        maxBlocksInCache: 1,
+        gridName: 'inventoryGrid'
       },
       supplyRequestData: [],
       inventoryData: [],
       supplyRequestDetail: {},
       inventoryDetail: {},
       toggleSRDetailModal: this.toggleSRDetailModal,
+      toggleInventoryDetailModal: this.toggleInventoryDetailModal,
       selectedSupplyRequest: {},
-      srModalEvent: new Subject()
+      selectedInventory: {},
+      srModalEvent: new Subject(),
+      srRefreshEvent: new Subject(),
+      inventoryModalEvent: new Subject(),
+      inventoryRefreshEvent: new Subject()
     };
     this.supplyRequestModal = this.supplyRequestModal.bind(this);
     this.inventoryModal = this.inventoryModal.bind(this);
@@ -104,12 +110,28 @@ class RequestAndInventoryView extends BaseComponent {
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
+
+    this.state.srRefreshEvent.subscribe(() => {
+      this.refreshSRGrid();
+    });
+
+    this.state.inventoryRefreshEvent.subscribe(() => {
+      this.refreshInventoryGrid();
+    });
   }
 
   onSRGridReady(params) {
     this.setState({...this.state, supplyRequestTableApi: params.api});
     params.api.setDatasource(this.supplyRequestDataSource());
     params.api.sizeColumnsToFit();
+  }
+
+  refreshSRGrid() {
+    this.state.supplyRequestTableApi.purgeInfiniteCache();
+  }
+
+  refreshInventoryGrid() {
+    this.state.inventoryTableApi.purgeInfiniteCache();
   }
 
   onInventoryGridReady(params) {
@@ -134,16 +156,10 @@ class RequestAndInventoryView extends BaseComponent {
     }
   };
 
-  toggleInventoryDetailModal = modalType => () => {
-    if (!modalType) {
-      return this.setState({ ...this.state,
-        inventoryDetailModal: !this.state.inventoryDetailModal,
-      });
-    }
+  toggleInventoryDetailModal = () => {
+    this.state.inventoryModalEvent.next(this.state.selectedInventory);
   };
   toggleSRDetailModal = () => {
-    console.log(this.state.selectedSupplyRequest);
-    
     this.state.srModalEvent.next(this.state.selectedSupplyRequest);
   };
 
@@ -279,18 +295,18 @@ class RequestAndInventoryView extends BaseComponent {
           </ModalBody>
         </Modal>
         
-        <SupplyRequestDetailsModal openModalEvent={this.state.srModalEvent} supplyRequest={this.state.selectedSupplyRequest}>
-
+        <SupplyRequestDetailsModal openModalEvent={this.state.srModalEvent} 
+        supplyRequest={this.state.selectedSupplyRequest}
+        dataChanged={this.state.srRefreshEvent}
+        >
         </SupplyRequestDetailsModal>
 
-        <Modal
-          isOpen={this.state.inventoryDetailModal}
-          toggle={this.toggleInventoryDetailModal()}>
-          <ModalHeader toggle={this.toggleInventoryDetailModal()}>Inventory Details</ModalHeader>
-          <ModalBody>
-           
-          </ModalBody>
-        </Modal>
+        <InventoryDetailsModal openModalEvent={this.state.inventoryModalEvent} 
+        inventory={this.state.selectedInventory}
+        dataChanged={this.state.inventoryRefreshEvent}
+        >
+        </InventoryDetailsModal>
+
         </RequestInventoryContext.Provider>
       </Page>
     );

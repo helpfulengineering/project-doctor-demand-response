@@ -8,7 +8,9 @@ export default class NameCellRenderer extends React.Component {
     render() {
         
         let data = this.props.data;
+        console.log(this.props);
         let value = '';
+        let gridName = this.props.agGridReact.gridOptions.gridName;
 
         if(data && data.user) {
             if(!FormUtil.isEmpty(data.user.first_name)) {
@@ -24,8 +26,13 @@ export default class NameCellRenderer extends React.Component {
         return <RequestInventoryContext.Consumer>
             {ctx => (
                 <Button size="sm" className="p-0" color="link text-secondary" onClick={ () => {
+                    if(gridName === 'supplyRequestGrid') {
                         ctx.selectedSupplyRequest = this.props.data;
                         ctx.toggleSRDetailModal();
+                    } else {
+                        ctx.selectedInventory = this.props.data;
+                        ctx.toggleInventoryDetailModal();
+                    }
                     }
                 }>{value}</Button>
                 )
