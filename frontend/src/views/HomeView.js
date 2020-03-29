@@ -93,7 +93,7 @@ class HomeView extends BaseComponent {
                 Supply requests and Inventories
               </CardHeader>
               <CardBody>
-                <MapWithBubbles />
+                <MapWithBubbles/>
               </CardBody>
             </Card>
           </Col>
