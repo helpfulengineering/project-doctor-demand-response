@@ -5,12 +5,13 @@ import { BaseComponent } from '../components/BaseComponent';
 import { AuthenticationService } from '../services/AuthenticationService';
 import logoImage from '../assets/img/logo/Original.png';
 import queryString from 'query-string';
+import FormUtil from '../utils/form-util';
 
 class LoginForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, loginFailed: false, newActivation: false, loginInfo: {
+    this.state = { ...this.state, loginFailed: false, newActivation: false, messages: [], loginInfo: {
             user_name: '',
             password: ''
         }
@@ -19,6 +20,7 @@ class LoginForm extends BaseComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleLoginInfoChange = this.handleLoginInfoChange.bind(this);
     this.login = this.login.bind(this);
+    this.validate = this.validate.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
   }
 
@@ -46,7 +48,15 @@ class LoginForm extends BaseComponent {
 
   login = event => {
     event.preventDefault();
-    this.validate();
+    let loginInfo = this.state.loginInfo;
+    FormUtil.trimFields(loginInfo);
+    let messages = this.validate(loginInfo);
+
+    if(messages.length !== 0) {
+      this.setState({...this.state, messages: messages});
+      return;
+    }
+
     
     AuthenticationService.login(this.state.loginInfo).subscribe(resp => {
       if(resp && resp.status === true) {
@@ -60,9 +70,20 @@ class LoginForm extends BaseComponent {
     });
   }
 
-  validate() {
+  validate(lf) {
+    let messages = [];
 
+    if(FormUtil.isEmpty(lf.user_name)) {
+      messages.push('Your Email is required');
+    }
+    if(FormUtil.isEmpty(lf.password)) {
+      messages.push('Your Password is required');
+    }
+    
+    return messages;
   }
+
+
   render() {
     
     return (
@@ -76,7 +97,17 @@ class LoginForm extends BaseComponent {
         <Col md={9} sm={9} xs={9} className="mb-3 border-0">
           <Card className="flex-row border-0">
             <CardBody>
-                <Form onSubmit={this.login}>
+                {
+                  this.state.messages.length > 0 ? 
+                  <Alert color='danger'> <ul>
+                    {
+                      this.state.messages.map(message => {
+                      return <li>{message}</li>
+                      })
+                    }
+                  </ul></Alert> : ''
+                }
+                <Form name='lf' onSubmit={this.login}>
                   {
                     this.state.newActivation === 'true' ? 
                     <Alert color="success">
