@@ -40,7 +40,7 @@ app.use('/dashboard', dashboardRouter);
 
 app.constants = {
   db: {
-    url: 'mongodb://localhost:27017/',
+    url: process.env.MONGO_URL || 'mongodb://localhost:27017/',
     database: 'covid19'
   }
 }

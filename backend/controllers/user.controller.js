@@ -3,6 +3,7 @@ var dataAccess = require('../data-access/mongo.dataaccess');
 var emailUtil = require('../util/email');
 const jwt = require('jsonwebtoken');
 var cfg = require("../security/jwtConfig");
+const bcrypt = require('bcryptjs');
 
 // Regular users must only be able to modify / delete their own profile
 // Admin - full access
@@ -11,15 +12,18 @@ let userController = {
         
         let user = req.body;
         
-        let existingUser = await dataAccess.find('users', {'user_name': req.body.user_name});
+        let existingUser = await dataAccess.find('users', {'user_name': user.user_name});
 
         if(existingUser) {
             return {status: false, data: {existingUser: true}};
         }
 
+        userController.validateUserRequest(user);
+        await userController.hashPassword(user);
+        
         user.status = 'new';
         user.activation_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
-        dataAccess.add('users', req.body);
+        dataAccess.add('users', user);
 
         let params = { 'to': req.body.email};
         params.template = 'activation_email';
@@ -70,7 +74,7 @@ let userController = {
                 return { status: false, data: {userNotActivated: true}};
             } else if(user.status == 'suspended') {
                 return { status: false, data: {userSuspended: true}};
-            } else if(user && req.body.password == user.password) {
+            } else if(user && userController.verifyPassword(req.body, user.password)) {
 
                 if(user.status == 'active') {
                     var payload = {
@@ -110,6 +114,43 @@ let userController = {
         delete user.user_name;
         delete user.password;
         return user;
+    },
+    validateUserRequest: function(userRequest){
+        const requiredFields = [
+            'org_name',
+            'user_name',
+            'password',
+            'city',
+            'state',
+            'country',
+            'zipcode',
+            'phone',
+            'email',
+        ];
+    
+        requiredFields.forEach(key => {
+            if(typeof(userRequest[key]) !== 'string' || userRequest[key].length === 0){
+                throw Error(`${key} field is required`);
+            }
+        })
+    },
+    
+    hashPassword: async function(user){
+        user.password = await bcrypt.hash(user.password, 10);
+    },
+    
+    validateUsername: function(user_name){
+        if(typeof(user_name) !== 'string' || user_name.length === 0) {
+            throw Error('Invalid credentials');
+        }
+    },
+    
+    verifyPassword: async function(user, password){
+        if(!user || !(await bcrypt.compare(password, user.passwordHash))) {
+            return false;
+        }
+
+        return true;
     }
 };
 
