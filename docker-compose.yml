@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: backend
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - ./backend:/app:delegated
+      - /app/node_modules/node-sass
+    environment:
+      MONGO_URL: mongodb://mongo
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: frontend
+    ports:
+      - 8080:3000
+    volumes:
+      - ./frontend:/app:delegated
+      - /app/node_modules/node-sass
+    environment:
+      BACKEND_URL: http://backend:3000
+    depends_on:
+      - backend
+  mongo:
+    image: mongo
+    volumes:
+      - data:/data/db
+    ports:
+      - 27017:27017
+volumes:
+  data:
