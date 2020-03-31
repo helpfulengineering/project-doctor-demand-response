@@ -69,12 +69,14 @@ let userController = {
     login: async function(req, res) {
         let user = await dataAccess.find('users', {'user_name': req.body.user_name});
     
+        let passwordVerified = await userController.verifyPassword(req.body, user.password);
+
         if(user) {
             if(user.status == 'new') {
                 return { status: false, data: {userNotActivated: true}};
             } else if(user.status == 'suspended') {
                 return { status: false, data: {userSuspended: true}};
-            } else if(user && userController.verifyPassword(req.body, user.password)) {
+            } else if(user && passwordVerified) {
 
                 if(user.status == 'active') {
                     var payload = {
@@ -146,7 +148,7 @@ let userController = {
     },
     
     verifyPassword: async function(user, password){
-        if(!user || !(await bcrypt.compare(password, user.passwordHash))) {
+        if(!user || !(await bcrypt.compare(password, user.password))) {
             return false;
         }
 
