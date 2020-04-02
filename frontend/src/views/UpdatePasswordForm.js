@@ -7,11 +7,11 @@ import logoImage from '../assets/img/logo/Original.png';
 import queryString from 'query-string';
 import FormUtil from '../utils/form-util';
 
-class LoginForm extends BaseComponent {
+class UpdatePasswordForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, newActivation: false, messages: [], loginInfo: {
+    this.state = { ...this.state, newActivation: false, retypedPassword: '', messages: [], loginInfo: {
             user_name: '',
             password: ''
         }
@@ -19,11 +19,10 @@ class LoginForm extends BaseComponent {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleLoginInfoChange = this.handleLoginInfoChange.bind(this);
-    this.login = this.login.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
     this.validate = this.validate.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
-    this.redirectToUpdatePassword = this.redirectToUpdatePassword.bind(this);
-
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   componentDidMount() {
@@ -42,10 +41,10 @@ class LoginForm extends BaseComponent {
     event.preventDefault();
     this.props.history.push("/signup");
   }
-  
-  redirectToUpdatePassword(event) {
+
+  redirectToLogin(event) {
     event.preventDefault();
-    this.props.history.push("/updatePassword");
+    this.props.history.push("/login");
   }
 
   handleChange(event) {
@@ -53,13 +52,13 @@ class LoginForm extends BaseComponent {
     this.setState({...state});
   }
 
-  login = event => {
+  updatePassword = event => {
     event.preventDefault();
 
     let loginInfo = this.state.loginInfo;
     FormUtil.trimFields(loginInfo);
 
-    AuthenticationService.login(this.state.loginInfo).subscribe(resp => {
+    AuthenticationService.updatePassword(this.state.loginInfo).subscribe(resp => {
       if(resp && resp.status === true) {
         this.props.history.push("/");
       } else {
@@ -80,15 +79,18 @@ class LoginForm extends BaseComponent {
     
   }
 
-  validate(lf) {
+  validate(rf) {
     let messages = [];
 
-    if(FormUtil.isEmpty(lf.user_name)) {
+    if(FormUtil.isEmpty(rf.user_name)) {
       messages.push('Your Email is required');
     }
-    if(FormUtil.isEmpty(lf.password)) {
+    if(FormUtil.isEmpty(rf.password)) {
       messages.push('Your Password is required');
     } 
+    if(FormUtil.isEmpty(rf.resetPassword)) {
+        messages.push('You Must Retype Your Password');
+      } 
     return messages;
   }
 
@@ -116,7 +118,7 @@ class LoginForm extends BaseComponent {
                     }
                   </ul></Alert> : ''
                 }
-                <Form name='lf' onSubmit={this.login}>
+                <Form name='rf' onSubmit={this.resetPassword}>
                   {
                     (
                       this.state.newActivation === 'true' 
@@ -136,69 +138,48 @@ class LoginForm extends BaseComponent {
                   {
                     (
                       this.state.existingUser === true 
-                      && this.state.userNotActivated === false 
-                      && this.state.userSuspended === false 
-                      && this.state.loginFailed === true
-                    ) ? 
-                    <Alert color="danger">
-                      Login failed due to invalid credentials.  Click 'Forgot Password' to Reset Your Password
-                    </Alert> : '' 
-                  }
-                  {
-                    (
-                      this.state.existingUser === true 
                       && this.state.userNotActivated === true  
                     ) ?
                     <Alert color="warning">
-                      Your account is not activated yet! An activation email has been previously sent out to your email.
+                      Your account is not activated yet! Please enter your username and password and retype your password.
                     </Alert> : '' 
                   }
-                  {
-                    (
-                      this.state.existingUser === true 
-                      && this.state.userSuspended === true 
-                    ) ? 
-                    <Alert color="danger">
-                      Your account is suspended.
-                    </Alert> : '' 
-                  }
+
                   <FormGroup>
-                    <Label>User Name</Label>
+                    <Label>Enter User Name</Label>
                     <Input type="text" name="user_name" value={this.state.loginInfo.user_name} onChange={this.handleLoginInfoChange}/>
                   </FormGroup>
                   <FormGroup>
-                    <Label>Password</Label>
-                    <Input type="password" name="password" value={this.state.loginInfo.password} onChange={this.handleLoginInfoChange} />
+                    <Label>Enter New Password</Label>
+                    <Input type="password" name="newpassword" value={this.state.loginInfo.password} onChange={this.handleLoginInfoChange} />
                   </FormGroup>
-                
+                  <FormGroup>
+                    <Label>Retype New Password</Label>
+                    <Input type="password" name="retypePassword" value={this.state.retypedPassword} onChange={this.handleLoginInfoChange} />
+                  </FormGroup>
+
                   <hr />
+
                   <Row className='p-0'>
                     <Col xl={3} lg={3} md={3}>
                       <Button
                         size="md"
-                        block color="primary"
+                        block
+                        color="primary"
                         className="border-0"
-                        onClick={this.login}>
+                        onClick={this.updatePassword}>
                         Login
                       </Button>
                     </Col>
                     <Col xl={6} lg={6} md={6} className="p-0">
                       <Button
-                        name="btnSignup"
-                        color="secondary"                        
-                        onClick={this.redirectToSignup}>
-                          Signup
+                        color="secondary"
+                        onClick={this.redirectToSignup}
+                        >
+                        Signup
                       </Button>
                     </Col>
                     <Col xl={3} lg={3} md={3} className="d-flex justify-content-center p-0">
-                      <Button
-                        name="btnUpdatePassword" 
-                        outline color="link" 
-                        size="sm" 
-                        className="text-primary"
-                        onClick={this.redirectToUpdatePassword}>
-                          Forgot Password?
-                      </Button>
                     </Col>
                   </Row>
                 </Form>
@@ -210,4 +191,4 @@ class LoginForm extends BaseComponent {
   }
 }
 
-export default withRouter(LoginForm);
+export default withRouter(UpdatePasswordForm);

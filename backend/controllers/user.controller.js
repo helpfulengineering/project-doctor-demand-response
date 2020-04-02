@@ -133,6 +133,7 @@ let userController = {
                 loginFailed: true, 
                 existingUser: false}};
     },
+    
     search: async function(req, res) {
         let data = await dataAccess.search('users', req.body);
         return data;

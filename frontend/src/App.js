@@ -8,6 +8,7 @@ import axios from "axios";
 import './styles/reduction.scss';
 import SignupView from './views/SignupView';
 import LoginView from './views/LoginView';
+import UpdatePasswordView from './views/UpdatePasswordView';
 import ActivationView from './views/ActivationView';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -50,6 +51,15 @@ class App extends React.Component {
               layout={EmptyLayout}
               component={props => (
                 <LoginView {...props}  />
+              )}
+            />
+
+            <LayoutRoute
+              exact
+              path="/updatePassword"
+              layout={EmptyLayout}
+              component={props => (
+                <UpdatePasswordView {...props}  />
               )}
             />
             
