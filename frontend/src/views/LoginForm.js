@@ -11,7 +11,7 @@ class LoginForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, loginFailed: false, newActivation: false, messages: [], loginInfo: {
+    this.state = { ...this.state, newActivation: false, messages: [], loginInfo: {
             user_name: '',
             password: ''
         }
@@ -48,26 +48,29 @@ class LoginForm extends BaseComponent {
 
   login = event => {
     event.preventDefault();
+
     let loginInfo = this.state.loginInfo;
     FormUtil.trimFields(loginInfo);
-    let messages = this.validate(loginInfo);
 
-    if(messages.length !== 0) {
-      this.setState({...this.state, messages: messages});
-      return;
-    }
-
-    
     AuthenticationService.login(this.state.loginInfo).subscribe(resp => {
       if(resp && resp.status === true) {
         this.props.history.push("/");
       } else {
-        this.setState({...this.state, userNotActivated: resp.data.userNotActivated, 
+        this.setState({...this.state, 
+          userNotActivated: resp.data.userNotActivated, 
           loginFailed: resp.data.loginFailed, 
-          userSuspended: resp.data.userSuspended
+          userSuspended: resp.data.userSuspended,
+          existingUser: resp.data.existingUser
         });
       }
     });
+
+    let messages = this.validate(loginInfo);
+    if(messages.length !== 0) {
+      this.setState({...this.state, messages: messages});
+      return;
+    }
+    
   }
 
   validate(lf) {
@@ -78,14 +81,13 @@ class LoginForm extends BaseComponent {
     }
     if(FormUtil.isEmpty(lf.password)) {
       messages.push('Your Password is required');
-    }
-    
+    } 
     return messages;
   }
 
 
   render() {
-    
+   
     return (
       <Row className="border-0">
         <Col md={3} sm={3} xs={3} className="border-0 d-flex mb-3 align-items-center">
@@ -109,25 +111,46 @@ class LoginForm extends BaseComponent {
                 }
                 <Form name='lf' onSubmit={this.login}>
                   {
-                    this.state.newActivation === 'true' ? 
+                    (
+                      this.state.newActivation === 'true' 
+                    ) ? 
                     <Alert color="success">
                       Your account is activated! Please login.
                     </Alert> : '' 
                   }
                   {
-                    this.state.loginFailed === true ? 
+                    (
+                      this.state.existingUser === false
+                    ) ? 
                     <Alert color="danger">
-                      Login failed due to invalid credentials.
+                      User does not exist.  Click 'Register' to Create a New Account.
                     </Alert> : '' 
                   }
                   {
-                    this.state.userNotActivated === true ? 
+                    (
+                      this.state.existingUser === true 
+                      && this.state.userNotActivated === false 
+                      && this.state.userSuspended === false 
+                      && this.state.loginFailed === true
+                    ) ? 
+                    <Alert color="danger">
+                      Login failed due to invalid credentials.  Click 'Forgot Password' to Reset Your Password
+                    </Alert> : '' 
+                  }
+                  {
+                    (
+                      this.state.existingUser === true 
+                      && this.state.userNotActivated === true  
+                    ) ?
                     <Alert color="warning">
                       Your account is not activated yet! An activation email has been previously sent out to your email.
                     </Alert> : '' 
                   }
                   {
-                    this.state.userSuspended === true ? 
+                    (
+                      this.state.existingUser === true 
+                      && this.state.userSuspended === true 
+                    ) ? 
                     <Alert color="danger">
                       Your account is suspended.
                     </Alert> : '' 

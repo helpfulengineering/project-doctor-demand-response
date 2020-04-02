@@ -57,6 +57,7 @@ let mongoDataAccess = {
             doc = dbMgr.dbConnection.collection(collection).findOne(
                 query
             );
+        
             await doc.then(doc => {
                 
             }).catch(err => {

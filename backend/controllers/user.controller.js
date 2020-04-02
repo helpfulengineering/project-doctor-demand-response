@@ -67,15 +67,29 @@ let userController = {
         return data;
     },
     login: async function(req, res) {
+
         let user = await dataAccess.find('users', {'user_name': req.body.user_name});
-    
-        let passwordVerified = await userController.verifyPassword(req.body, user.password);
 
         if(user) {
+            let passwordVerified = await this.verifyPassword(req.body, user.password);
             if(user.status == 'new') {
-                return { status: false, data: {userNotActivated: true}};
+                return { 
+                    status: false, 
+                    data: {
+                        userNotActivated: true, 
+                        userSuspended: false, 
+                        loginFailed: true, 
+                        existingUser: true}
+                };
             } else if(user.status == 'suspended') {
-                return { status: false, data: {userSuspended: true}};
+                return { 
+                    status: false, 
+                    data: {
+                        userNotActivated: false, 
+                        userSuspended: true,
+                        loginFailed: true,
+                        existingUser: true}
+                    };
             } else if(user && passwordVerified) {
 
                 if(user.status == 'active') {
@@ -87,6 +101,11 @@ let userController = {
                     res.json({
                         status: true,
                         token: token,
+                        data: {
+                            userNotActivated: false,
+                            userSuspended: false,
+                            loginFailed: false, 
+                            existingUser: true},
                         user: payload
                     });
                 }
@@ -97,9 +116,22 @@ let userController = {
                     update.status = 'suspended';
                 }
                 dataAccess.update('users', update);
+                return { 
+                    status: false, 
+                    data: {
+                        userNotActivated: false,
+                        userSuspended: false,
+                        loginFailed: true, 
+                        existingUser: true}};
             }
         }
-        return { status: false, data: {loginFailed: true}};
+        return { 
+            status: false, 
+            data: {
+                userNotActivated: true,
+                userSuspended: false,
+                loginFailed: true, 
+                existingUser: false}};
     },
     search: async function(req, res) {
         let data = await dataAccess.search('users', req.body);
@@ -148,7 +180,7 @@ let userController = {
     },
     
     verifyPassword: async function(user, password){
-        if(!user || !(await bcrypt.compare(password, user.password))) {
+        if(!user || !(await bcrypt.compare(user.password, password))) {
             return false;
         }
 
