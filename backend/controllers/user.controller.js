@@ -52,9 +52,35 @@ let userController = {
         // Access restriction
         dataAccess.delete('users', req.body._id);
     },
-    updatePassword: function(req, res) {
-        // Access restriction
-        dataAccess.update('users', { "_id" : req.body._id, "password": req.body.password});
+
+    updatePasswordRequest: async function(req, res) {
+        let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
+        if(user){
+            if(user.status === 'active') {
+                console.log("user.user_name: ", user.user_name);
+                console.log("req.body.user_name: ", req.body.user_name);
+                user.password_update_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
+                dataAccess.update('users', { "_id" : user._id, "password_update_code": user.password_update_code});
+
+                return {status: true, data: {existingUser: true, userNotActivated: false}};
+            }
+            return {status: false, data: {existingUser: true, userNotActivated: true}};
+        }
+        return {status: false, data: {existingUser: false, userNotActivated: true}};
+    },
+    updatePassword: async function(req, res) {
+        let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
+        if(user){
+            if(user.status == 'new'){
+                return {status: false, data: {existingUser: true, userNotActivated: true}};
+            }
+            user.password = req.body.password;
+            await userController.hashPassword(user);
+            dataAccess.update('users', { "_id" : user._id, "password": user.password});
+            return {status: true, data: {existingUser: true, userNotActivated: false}};
+        }
+        return {status: false, data: {existingUser: false, userNotActivated: true}};
+        
     },
     updateProfile: function(req, res) {
         // Access restriction
@@ -172,6 +198,7 @@ let userController = {
     
     hashPassword: async function(user){
         user.password = await bcrypt.hash(user.password, 10);
+        //return user.password;
     },
     
     validateUsername: function(user_name){

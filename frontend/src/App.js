@@ -9,6 +9,7 @@ import './styles/reduction.scss';
 import SignupView from './views/SignupView';
 import LoginView from './views/LoginView';
 import UpdatePasswordView from './views/UpdatePasswordView';
+import UpdatePasswordRequestView from './views/UpdatePasswordRequestView';
 import ActivationView from './views/ActivationView';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -53,7 +54,14 @@ class App extends React.Component {
                 <LoginView {...props}  />
               )}
             />
-
+            <LayoutRoute
+              exact
+              path="/updatePasswordRequest"
+              layout={EmptyLayout}
+              component={props => (
+                <UpdatePasswordRequestView {...props}  />
+              )}
+            />
             <LayoutRoute
               exact
               path="/updatePassword"

@@ -7,20 +7,18 @@ import logoImage from '../assets/img/logo/Original.png';
 import queryString from 'query-string';
 import FormUtil from '../utils/form-util';
 
-class UpdatePasswordForm extends BaseComponent {
+class UpdatePasswordRequestForm extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.state, messages: [], userInfo: {
+    this.state = { ...this.state, userNotActivated: '', existingUser: '', successfulRequest: false, messages: [], userInfo: {
             user_name: '',
-            password: '',
-            retypedPassword: ''
         }
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
-    this.updatePassword = this.updatePassword.bind(this);
+    this.updatePasswordRequest = this.updatePasswordRequest.bind(this);
     this.validate = this.validate.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
@@ -53,27 +51,27 @@ class UpdatePasswordForm extends BaseComponent {
     this.setState({...state});
   }
 
-  updatePassword = event => {
+  updatePasswordRequest = event => {
     event.preventDefault();
 
     let userInfo = this.state.userInfo;
     FormUtil.trimFields(userInfo);
 
-    if(userInfo.password === userInfo.retypedPassword
-       && userInfo.password !=='')
-       {
-          UserService.updatePassword(this.state.userInfo).subscribe(resp => {
-            if(resp && resp.status === true) {
-              this.props.history.push("/login");
-            } else {
-                this.setState({...this.state,
-                userNotActivated: resp.data.userNotActivated, 
-                existingUser: resp.data.existingUser
-                });
-              }
+    UserService.updatePasswordRequest(this.state.userInfo).subscribe(resp => {
+        if(resp && resp.status === true) {
+          this.setState({...this.state, 
+            successfulRequest: true,
+            userNotActivated: resp.data.userNotActivated, 
+            existingUser: resp.data.existingUser
+          });
+        } else {
+          this.setState({...this.state,
+            successfulRequest: false, 
+            userNotActivated: resp.data.userNotActivated, 
+            existingUser: resp.data.existingUser
           });
         }
-  
+    });
 
     let messages = this.validate(userInfo);
     if(messages.length !== 0) {
@@ -83,20 +81,11 @@ class UpdatePasswordForm extends BaseComponent {
     
   }
 
-  validate(rf) {
+  validate(pr) {
     let messages = [];
 
-    if(FormUtil.isEmpty(rf.user_name)) {
+    if(FormUtil.isEmpty(pr.user_name)) {
       messages.push('Your Email is required');
-    }
-    if(FormUtil.isEmpty(rf.password)) {
-      messages.push('Your Password is required');
-    } 
-    if(FormUtil.isEmpty(rf.retypedPassword)) {
-      messages.push('You Must Retype Your Password');
-    }
-    if(rf.password !== rf.retypedPassword) {
-      messages.push('Password and Retyped Password Do Not Match');
     } 
     return messages;
   }
@@ -125,13 +114,21 @@ class UpdatePasswordForm extends BaseComponent {
                     }
                   </ul></Alert> : ''
                 }
-                <Form name='rf' onSubmit={this.updatePassword}>
+                <Form name='pr' onSubmit={this.updatePasswordRequest}>
+                {
+                    (
+                      this.state.successfulRequest === true
+                    ) ? 
+                    <Alert color="danger">
+                      Your Password Request Was Successful!  Please Check Your Email For Your Password Reset Key.
+                    </Alert> : '' 
+                  }
                   {
                     (
                       this.state.existingUser === false
                     ) ? 
                     <Alert color="danger">
-                      User does not exist.  Click 'Signup' to Create a New Account.
+                      User Account Does Not Exist.  Click 'Signup' to Create a New Account.
                     </Alert> : '' 
                   }
                   {
@@ -140,32 +137,25 @@ class UpdatePasswordForm extends BaseComponent {
                       && this.state.userNotActivated === true  
                     ) ?
                     <Alert color="warning">
-                      Your account is not activated yet! Please enter your username and password and retype your password.
+                      Your account is not activated yet! Please check your email for activation instructions.
                     </Alert> : '' 
                   }
                   <FormGroup>
                     <Label>Enter User Name</Label>
                     <Input type="text" name="user_name" value={this.state.userInfo.user_name} onChange={this.handleUserInfoChange}/>
                   </FormGroup>
-                  <FormGroup>
-                    <Label>Enter New Password</Label>
-                    <Input type="password" name="password" value={this.state.userInfo.password} onChange={this.handleUserInfoChange}/>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Retype New Password</Label>
-                    <Input type="password" name="retypedPassword" value={this.state.userInfo.retypedPassword} onChange={this.handleUserInfoChange}/>
-                  </FormGroup>
 
                   <hr />
 
                   <Row className='p-0'>
-                    <Col xl={3} lg={3} md={3}>
+                    <Col xl={6} lg={6} md={6}>
                       <Button
                         size="md"
+                        width = ""
                         block
                         color="primary"
                         className="border-0"
-                        onClick={this.updatePassword}>
+                        onClick={this.updatePasswordRequest}>
                         Reset Password
                       </Button>
                     </Col>
@@ -189,4 +179,4 @@ class UpdatePasswordForm extends BaseComponent {
   }
 }
 
-export default withRouter(UpdatePasswordForm);
+export default withRouter(UpdatePasswordRequestForm);

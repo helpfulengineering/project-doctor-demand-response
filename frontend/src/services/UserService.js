@@ -22,4 +22,21 @@ export class UserService extends BaseService {
         return responseSubject;
     }
 
+    static updatePassword(userInfo) {
+        let responseSubject = new Subject();
+        RestService.post("users/updatePassword", userInfo).subscribe(resp => {
+          responseSubject.next(resp);
+        });
+    
+        return responseSubject;
+      } 
+      static updatePasswordRequest(userInfo) {
+        let responseSubject = new Subject();
+        RestService.post("users/updatePasswordRequest", userInfo).subscribe(resp => {
+          responseSubject.next(resp);
+        });
+    
+        return responseSubject;
+      } 
+
 }

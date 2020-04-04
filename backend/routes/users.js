@@ -3,10 +3,16 @@ var router = express.Router();
 const userController = require('../controllers/user.controller.js');
 var auth = require("../security/auth");
 
+// Update password request
+router.post('/updatePasswordRequest', async function(req, res, next) {
+  let data = await userController.updatePasswordRequest(req, res);
+  res.send(data);
+});
+
 // Update password
-router.post('/updatePassword', auth.authenticate(), function(req, res, next) {
-  userController.updatePassword(req, res);
-  res.send({status: true});
+router.post('/updatePassword', async function(req, res, next) {
+  let data = await userController.updatePassword(req, res);
+  res.send(data);
 });
 
 // Update User Profile

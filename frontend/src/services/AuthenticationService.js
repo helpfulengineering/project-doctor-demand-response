@@ -28,23 +28,7 @@ export class AuthenticationService extends BaseService {
     localStorage.removeItem('access_token');
   }
 
-  static updatePassword(loginInfo) {
-    let responseSubject = new Subject();
-    RestService.post("users/updatePassword", loginInfo).subscribe(resp => {
-      
-      if(resp.user) {
-        localStorage.setItem('access_token', 'Bearer ' + resp.token);
-        localStorage.setItem('user', JSON.stringify(resp.user));
-        AuthenticationService.getAppContext().token = localStorage.getItem('access_token');
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_token');
-      }
-      
-      responseSubject.next(resp);
-    });
-
-    return responseSubject;
-  } 
-
+  
   static isAuthenticated() {
     if(localStorage.getItem('access_token') && 
         localStorage.getItem('access_token').startsWith('Bearer')) {
