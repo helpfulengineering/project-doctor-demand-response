@@ -57,8 +57,6 @@ let userController = {
         let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
         if(user){
             if(user.status === 'active' || user.status === 'suspended') {
-                console.log("user.user_name: ", user.user_name);
-                console.log("req.body.user_name: ", req.body.user_name);
                 user.password_update_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
                 await dataAccess.update('users', { "_id" : user._id, "password_update_code": user.password_update_code});
                 
@@ -81,8 +79,8 @@ let userController = {
         let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
         
         if(user.user_name === req.body.user_name && user.password_update_code === req.body.code) {
-            user.activation_code = '';
-            await dataAccess.update('users', { "_id" : user._id, "activation_code": user.activation_code});
+            user.password_update_code = '';
+            await dataAccess.update('users', { "_id" : user._id, "password_update_code": user.password_update_code});
             return true;
         }
 

@@ -5,15 +5,15 @@ var SearchUtil = require('../util/search-utility');
 // Regular users must only be able to modify / delete their inventories
 // Admin - full access
 let inventoryController = {
-    add: function(req, res) {
-        dataAccess.add('inventory', req.body);
+    add: async function(req, res) {
+        await dataAccess.add('inventory', req.body);
     },
-    update: function(req, res) {
+    update: async function(req, res) {
         let inventory = inventoryController.initializeForUpdate(req.body);
-        dataAccess.update('inventory', inventory);
+        await dataAccess.update('inventory', inventory);
     },
-    delete: function(req, res) {
-        dataAccess.delete('inventory', req.body._id);
+    delete: async function(req, res) {
+        await dataAccess.delete('inventory', req.body._id);
     },
     view: async function(req, res) {
         let data = await dataAccess.view('inventory', req.query._id);

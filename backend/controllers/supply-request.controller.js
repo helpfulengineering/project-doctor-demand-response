@@ -6,17 +6,17 @@ var SearchUtil = require('../util/search-utility');
 // Regular users must only be able to modify / delete their supply requests
 // Admin - full access
 let supplyRequestController = {
-    add: function(req, res) {
+    add: async function(req, res) {
         let supplyRequest = req.body;
-        dataAccess.add('supply_request', supplyRequest);
+        await dataAccess.add('supply_request', supplyRequest);
     },
-    update: function(req, res) {
+    update: async function(req, res) {
 
         let supply_request = supplyRequestController.initializeForUpdate(supply_request);
-        dataAccess.update('supply_request', supply_request);
+        await dataAccess.update('supply_request', supply_request);
     },
-    delete: function(req, res) {
-        dataAccess.delete('supply_request', req.body._id);
+    delete: async function(req, res) {
+        await dataAccess.delete('supply_request', req.body._id);
     },
     view: async function(req, res) {
         let data = await dataAccess.view('supply_request', req.query._id);
