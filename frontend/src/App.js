@@ -11,6 +11,8 @@ import LoginView from './views/LoginView';
 import UpdatePasswordView from './views/UpdatePasswordView';
 import UpdatePasswordRequestView from './views/UpdatePasswordRequestView';
 import ActivationView from './views/ActivationView';
+import SystemDownView from './views/SystemDownView';
+
 import PrivateRoute from './components/PrivateRoute';
 
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
@@ -86,6 +88,15 @@ class App extends React.Component {
               layout={EmptyLayout}
               component={props => (
                 <ActivationView {...props} />
+              )}
+            />
+
+            <LayoutRoute
+              exact
+              path="/systemDown"
+              layout={EmptyLayout}
+              component={props => (
+                <SystemDownView {...props} />
               )}
             />
 

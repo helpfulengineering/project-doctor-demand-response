@@ -73,10 +73,8 @@ class LoginForm extends BaseComponent {
     });
 
     let messages = this.validate(loginInfo);
-    if(messages.length !== 0) {
-      this.setState({...this.state, messages: messages});
-      return;
-    }
+    this.setState({...this.state, messages: messages});
+    return;
     
   }
 
@@ -106,6 +104,8 @@ class LoginForm extends BaseComponent {
         <Col md={9} sm={9} xs={9} className="mb-3 border-0">
           <Card className="flex-row border-0">
             <CardBody>
+                
+                <Form name='lf' onSubmit={this.login}>
                 {
                   this.state.messages.length > 0 ? 
                   <Alert color='danger'> <ul>
@@ -116,7 +116,6 @@ class LoginForm extends BaseComponent {
                     }
                   </ul></Alert> : ''
                 }
-                <Form name='lf' onSubmit={this.login}>
                   {
                     (
                       this.state.newActivation === 'true' 

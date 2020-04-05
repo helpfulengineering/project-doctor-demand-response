@@ -76,10 +76,10 @@ class UpdatePasswordForm extends BaseComponent {
   
 
     let messages = this.validate(userInfo);
-    if(messages.length !== 0) {
+    //if(messages.length !== 0) {
       this.setState({...this.state, messages: messages});
       return;
-    }
+   // }
     
   }
 
@@ -115,6 +115,8 @@ class UpdatePasswordForm extends BaseComponent {
         <Col md={9} sm={9} xs={9} className="mb-3 border-0">
           <Card className="flex-row border-0">
             <CardBody>
+                
+                <Form name='rf' onSubmit={this.updatePassword}>
                 {
                   this.state.messages.length > 0 ? 
                   <Alert color='danger'> <ul>
@@ -125,7 +127,6 @@ class UpdatePasswordForm extends BaseComponent {
                     }
                   </ul></Alert> : ''
                 }
-                <Form name='rf' onSubmit={this.updatePassword}>
                   {
                     (
                       this.state.existingUser === false
