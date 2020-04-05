@@ -9,6 +9,12 @@ router.post('/updatePasswordRequest', async function(req, res, next) {
   res.send(data);
 });
 
+router.post('/updatePasswordCodeVerify', async function(req, res, next) {
+  let status = await userController.updatePasswordCodeVerify(req, res);
+  res.send({status: status});
+});
+
+
 // Update password
 router.post('/updatePassword', async function(req, res, next) {
   let data = await userController.updatePassword(req, res);

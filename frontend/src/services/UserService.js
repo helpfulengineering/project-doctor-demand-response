@@ -38,5 +38,14 @@ export class UserService extends BaseService {
     
         return responseSubject;
       } 
+      static updatePasswordCodeVerify(codeInfo) {
+        let responseSubject = new Subject();
+        RestService.post("users/updatePasswordCodeVerify", codeInfo).subscribe(resp => {
+            responseSubject.next(resp);
+        });
+
+        return responseSubject;
+     }
+      
 
 }

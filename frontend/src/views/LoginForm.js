@@ -22,7 +22,7 @@ class LoginForm extends BaseComponent {
     this.login = this.login.bind(this);
     this.validate = this.validate.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
-    this.redirectToUpdatePassword = this.redirectToUpdatePassword.bind(this);
+    this.redirectToUpdatePasswordRequest = this.redirectToUpdatePasswordRequest.bind(this);
 
   }
 
@@ -43,9 +43,9 @@ class LoginForm extends BaseComponent {
     this.props.history.push("/signup");
   }
   
-  redirectToUpdatePassword(event) {
+  redirectToUpdatePasswordRequest(event) {
     event.preventDefault();
-    this.props.history.push("/updatePassword");
+    this.props.history.push("/updatePasswordRequest");
   }
 
   handleChange(event) {
@@ -158,7 +158,7 @@ class LoginForm extends BaseComponent {
                       && this.state.userSuspended === true 
                     ) ? 
                     <Alert color="danger">
-                      Your account is suspended.
+                      Your account is suspended.  Please Click Forgot Password To Request a Password Reset.
                     </Alert> : '' 
                   }
                   <FormGroup>
@@ -195,7 +195,7 @@ class LoginForm extends BaseComponent {
                         outline color="link" 
                         size="sm" 
                         className="text-primary"
-                        onClick={this.redirectToUpdatePassword}>
+                        onClick={this.redirectToUpdatePasswordRequest}>
                           Forgot Password?
                       </Button>
                     </Col>

@@ -3,11 +3,11 @@ ObjectID = require('mongodb').ObjectID;
 var dbMgr = require('../data-access/db-manager');
 
 let mongoDataAccess = {
-    add: function(collection, data) {
+    add: async function(collection, data) {
         console.log('Creating record for collection: ' + collection);
         dbMgr.dbConnection.collection(collection).insertOne(data);
     },
-    update: function(collection, data) {
+    update: async function(collection, data) {
         let id = data._id;
         delete data._id;
         const update = {"$set": data};
@@ -23,7 +23,7 @@ let mongoDataAccess = {
         })
         .catch(err => console.error(`Failed to add review: ${err}`));
     },
-    delete: function(collection, id) {
+    delete: async function(collection, id) {
         dbMgr.dbConnection.collection(collection).remove(
             { "_id": new ObjectID(id) },
             {

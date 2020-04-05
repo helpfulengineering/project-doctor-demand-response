@@ -23,7 +23,7 @@ let userController = {
         
         user.status = 'new';
         user.activation_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
-        dataAccess.add('users', user);
+        await dataAccess.add('users', user);
 
         let params = { 'to': req.body.email};
         params.template = 'activation_email';
@@ -37,55 +37,79 @@ let userController = {
     activateUser: async function(req, res) {
         
         let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
-        
+     
         if(user.user_name === req.body.user_name && user.activation_code === req.body.code && user.status === 'new') {
             user.status = 'active';
             user.activation_code = '';
             user = userController.initializeForUpdate(user);
-            dataAccess.update('users', user);
+            await dataAccess.update('users', user);
             return true;
         }
 
         return false;
     },
-    unRegisterUser: function(req, res) {
+    unRegisterUser: async function(req, res) {
         // Access restriction
-        dataAccess.delete('users', req.body._id);
+        await dataAccess.delete('users', req.body._id);
     },
 
     updatePasswordRequest: async function(req, res) {
         let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
         if(user){
-            if(user.status === 'active') {
+            if(user.status === 'active' || user.status === 'suspended') {
                 console.log("user.user_name: ", user.user_name);
                 console.log("req.body.user_name: ", req.body.user_name);
                 user.password_update_code = emailUtil.generateActivationCode(req.app.email_config.activation_code_length);
-                dataAccess.update('users', { "_id" : user._id, "password_update_code": user.password_update_code});
-
+                await dataAccess.update('users', { "_id" : user._id, "password_update_code": user.password_update_code});
+                
+                let params = { 'to': req.body.email};
+                params.template = 'updatePassword_email';
+                params.subject = 'MHM Update Password';
+                params.updatePassword_url = req.app.common_config.app_root_url + 'updatePassword?user_name=' + user.user_name + '&code=' + user.password_update_code;
+                params.support_email = req.app.common_config.support_email;
+                emailUtil.sendMail(req.app.mailer, params);
+                
                 return {status: true, data: {existingUser: true, userNotActivated: false}};
             }
             return {status: false, data: {existingUser: true, userNotActivated: true}};
         }
         return {status: false, data: {existingUser: false, userNotActivated: true}};
     },
+
+    updatePasswordCodeVerify: async function(req, res) {
+        
+        let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
+        
+        if(user.user_name === req.body.user_name && user.password_update_code === req.body.code) {
+            user.activation_code = '';
+            await dataAccess.update('users', { "_id" : user._id, "activation_code": user.activation_code});
+            return true;
+        }
+
+        return false;
+    },
+
     updatePassword: async function(req, res) {
         let user = await dataAccess.find('users', { 'user_name': req.body.user_name});
         if(user){
             if(user.status == 'new'){
                 return {status: false, data: {existingUser: true, userNotActivated: true}};
             }
+            user.status = 'active';
+            user.failed_login_attempt = 0;
             user.password = req.body.password;
             await userController.hashPassword(user);
-            dataAccess.update('users', { "_id" : user._id, "password": user.password});
+            await dataAccess.update('users', { "_id" : user._id, "status": user.status, 'failed_login_attempt': user.failed_login_attempt, "password": user.password}); 
             return {status: true, data: {existingUser: true, userNotActivated: false}};
+            
         }
         return {status: false, data: {existingUser: false, userNotActivated: true}};
         
     },
-    updateProfile: function(req, res) {
+    updateProfile: async function(req, res) {
         // Access restriction
         let user = userController.initializeForUpdate(req.body);
-        dataAccess.update('users', user);
+        await dataAccess.update('users', user);
     },
     viewProfile: async function(req, res) {
         // Access restriction
@@ -119,6 +143,8 @@ let userController = {
             } else if(user && passwordVerified) {
 
                 if(user.status == 'active') {
+                    user.failed_login_attempt = 0;
+                    await dataAccess.update('users', { "_id" : user._id, 'failed_login_attempt': user.failed_login_attempt});
                     var payload = {
                         id: user._id,
                         user_name: user.user_name
@@ -141,7 +167,7 @@ let userController = {
                 if(user.failed_login_attempt > 3) {
                     update.status = 'suspended';
                 }
-                dataAccess.update('users', update);
+                await dataAccess.update('users', update);
                 return { 
                     status: false, 
                     data: {
@@ -164,9 +190,9 @@ let userController = {
         let data = await dataAccess.search('users', req.body);
         return data;
     },
-    deactivateUser: function(req, res) {   
+    deactivateUser: async function(req, res) {   
         // Access restriction
-        dataAccess.update('users', { "_id" : req.body._id, "active": false});
+        await dataAccess.update('users', { "_id" : req.body._id, "active": false});
     },
     initializeForUpdate: function(user) {
         delete user.created_by;

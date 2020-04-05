@@ -12,10 +12,9 @@ class UpdatePasswordForm extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = { ...this.state, messages: [], userInfo: {
-            user_name: '',
-            password: '',
-            retypedPassword: ''
-        }
+      user_name: '',
+      password: '',
+      retypedPassword: ''}
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -160,9 +159,10 @@ class UpdatePasswordForm extends BaseComponent {
                   <hr />
 
                   <Row className='p-0'>
-                    <Col xl={3} lg={3} md={3}>
+                    <Col xl={6} lg={6} md={6}>
                       <Button
                         size="md"
+                        width = ""
                         block
                         color="primary"
                         className="border-0"
